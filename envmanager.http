@@ -1,6 +1,9 @@
 @envmanager_HostAddress = http://localhost:5115
 
-GET {{envmanager_HostAddress}}/weatherforecast/
+### Listar todos os usuários
+GET {{envmanager_HostAddress}}/user
 Accept: application/json
 
-###
+### Listar usuário por ID
+GET {{envmanager_HostAddress}}/user/123
+Accept: application/json

@@ -5,6 +5,6 @@ namespace envmanager.src.infra.interfaces
     public interface IUserRepository
     {
         public Task<List<GetUsersResponse>> GetAll();
-        public Task<List<GetUsersResponse>> GetById();
+        public Task<GetUsersResponse> GetById(string id);
     }
 }

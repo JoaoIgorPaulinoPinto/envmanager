@@ -1,4 +1,5 @@
 ﻿using envmanager.src.infra.dtos;
+using envmanager.src.infra.interfaces;
 using envmanager.src.services.interfaces;
 
 namespace envmanager.src.services.usecases
@@ -6,18 +7,32 @@ namespace envmanager.src.services.usecases
     public class GetUsersUseCase : IGetUsersUseCase
     {
         private readonly IUserRepository _userRepository;
-        public class GetUsersUseCase(IUserRepository userRepository)
+        public GetUsersUseCase (IUserRepository userRepository)
         {
-            _userRepository =userRepository;
+            _userRepository = userRepository;
         }
-        public Task<List<UsersDtos.GetUsersResponse>> Execute()
+        public async Task<List<UsersDtos.GetUsersResponse>> Execute()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _userRepository.GetAll();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
-        public Task<List<UsersDtos.GetUsersResponse>> Execute(string id)
+        public async Task<UsersDtos.GetUsersResponse> Execute(string id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _userRepository.GetById(id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace envmanager.src.infra.schemes
+namespace envmanager.src.data.schemes
 {
     public class User
     {

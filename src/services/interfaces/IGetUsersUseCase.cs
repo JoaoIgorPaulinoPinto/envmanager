@@ -5,6 +5,6 @@ namespace envmanager.src.services.interfaces
     public interface IGetUsersUseCase
     {
         Task<List<GetUsersResponse>> Execute();
-        Task<List<GetUsersResponse>> Execute(string id);
+        Task<GetUsersResponse> Execute(string id);
     }
 }

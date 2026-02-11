@@ -1,4 +1,4 @@
-﻿using envmanager.src.infra.schemes;
+﻿using envmanager.src.data.schemes;
 using MongoDB.Driver;
 
 namespace envmanager.src.infra.db
