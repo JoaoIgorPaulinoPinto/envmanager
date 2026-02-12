@@ -11,9 +11,11 @@ using envmanager.src.services.usecases.user;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
+
 var builder = WebApplication.CreateBuilder(args);
 
-var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new ArgumentNullException("JWT Key não configurada");
+// --- Configurações de Segurança ---
+var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new ArgumentNullException("JWT Key is not configured in appsettings.json");
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "envmanager_api";
 
 builder.Services.AddAuthentication(options =>
@@ -31,7 +33,8 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = jwtIssuer,
         ValidAudience = jwtIssuer,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+        ClockSkew = TimeSpan.Zero 
     };
 });
 
@@ -39,10 +42,14 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
+// --- Registro do Exception Handler (Novo!) ---
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 // --- Services & Utils ---
 builder.Services.AddSingleton<AppDbContext>();
 builder.Services.AddSingleton<JWTService>();
-builder.Services.AddSingleton<SecurityService>(); 
+builder.Services.AddSingleton<SecurityService>();
 
 // --- Repositories ---
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -56,6 +63,8 @@ builder.Services.AddScoped<IAuthLoginUseCase, AuthLoginUseCase>();
 
 var app = builder.Build();
 
+app.UseExceptionHandler();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -63,9 +72,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// --- ORDEM IMPORTANTE DOS MIDDLEWARES ---
-app.UseAuthentication(); // 1. Verifica quem você é (lê o token)
-app.UseAuthorization();  // 2. Verifica o que você pode fazer
+app.UseAuthentication(); // 2. Identifica o usuário
+app.UseAuthorization();  // 3. Verifica permissões
 
 app.MapControllers();
 
