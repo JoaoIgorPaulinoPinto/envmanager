@@ -1,14 +1,8 @@
 @envmanager_HostAddress = http://localhost:5115
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OGRkNmRmZTMxMDBiOTMwNjY0ZWRlNCIsImV4cCI6MTc3MDk4OTY2MywiaXNzIjoiZW52bWFuYWdlcl9hcGkiLCJhdWQiOiJlbnZtYW5hZ2VyX2FwaSJ9.GJXWw42x3wr21f1hR8EhVkLGkqTmnD6xNwofyyTCcr4
+@refreshToken = aefeb7a7adab4bb19cfc25906726fb25
 
-### Listar todos os usuários
-GET {{envmanager_HostAddress}}/user
-Accept: application/json
-
-### Listar usuário por ID (Forma correta para [HttpGet("{id}")])
-GET {{envmanager_HostAddress}}/user/698d33b4561c841ebe5c09d4
-Accept: application/json
-
-### Criar usuário e receber Token
+### 1. Criar usuário (Cadastro)
 POST {{envmanager_HostAddress}}/user
 Content-Type: application/json
 {
@@ -17,10 +11,29 @@ Content-Type: application/json
   "password": "senha_segura21"
 }
 
-### Fazer login na conta
+
+### 2. Fazer Login 
 POST {{envmanager_HostAddress}}/auth
 Content-Type: application/json
 {
   "email": "joao1@email.com",
   "password": "senha_segura21"
 }
+
+
+### 3. Renovar Sessão
+POST {{envmanager_HostAddress}}/auth/refresh
+Content-Type: application/json
+"{{refreshToken}}"
+
+
+### 4. Listar todos os usuários (Requer Access Token)
+GET {{envmanager_HostAddress}}/user
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+
+### 5. Listar usuário por ID (Requer Access Token)
+GET {{envmanager_HostAddress}}/user/698d33b4561c841ebe5c09d4
+Accept: application/json
+Authorization: Bearer {{accessToken}}

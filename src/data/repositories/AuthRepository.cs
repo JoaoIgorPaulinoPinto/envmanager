@@ -37,5 +37,18 @@ namespace envmanager.src.data.repositories
 
             return _jwtService.CreateUserToken(user);
         }
+        public async Task<string> ValidateRefreshToken(string refreshToken)
+        {
+            var user = await _appDbContext.Users
+                .Find(u => u.RefreshToken == refreshToken)
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                throw new Exception("Invalid refresh token");
+            }
+            string sessionToken = _jwtService.CreateUserToken(user);
+            return sessionToken;
+        }
     }
 }

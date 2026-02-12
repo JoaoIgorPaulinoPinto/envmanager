@@ -60,6 +60,8 @@ namespace envmanager.src.infra.repositories
             u.UserName = user.user_name;
             u.Email = user.email;
 
+            u.RefreshToken = _jwtService.GenerateRefreshToken();
+            Console.WriteLine(u.RefreshToken);
             await _appDbContext.Users.InsertOneAsync(u);
 
             string token = _jwtService.CreateUserToken(u);

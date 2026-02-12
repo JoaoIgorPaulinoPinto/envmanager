@@ -14,5 +14,7 @@ namespace envmanager.src.data.schemes
         public string Email { get; set; } = "";
         [BsonElement("password")]
         public string Password { get; set; } = "";
+        [BsonElement("refresh_token")]
+        public string RefreshToken { get; set; } = "";
     }
 }

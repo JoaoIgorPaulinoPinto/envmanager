@@ -30,7 +30,8 @@ namespace envmanager.src.app.controllers
             if (string.IsNullOrWhiteSpace(id))
                 return BadRequest("User ID is required.");
 
-            return Ok(await _getUsersUseCase.Execute(id));
+            var user = await _getUsersUseCase.Execute(id);
+            return Ok(new { message = "Users successfully listed", user });
         }
         [AllowAnonymous]
         [HttpPost]
@@ -42,7 +43,8 @@ namespace envmanager.src.app.controllers
             {
                 return BadRequest("Email, user name and password are required.");
             }
-            return Ok(await _createUsersUseCase.Execute(user));
+            var createdUser = await _createUsersUseCase.Execute(user);
+            return Ok(new { message = "User successfully registered.", token = createdUser });
         }
     }
 }

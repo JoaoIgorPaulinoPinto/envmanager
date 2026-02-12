@@ -51,6 +51,7 @@ builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 // --- Use Cases ---
 builder.Services.AddScoped<IGetUsersUseCase, GetUsersUseCase>();
 builder.Services.AddScoped<ICreateUserUseCase, CreateUserUseCase>();
+builder.Services.AddScoped<IValidateRefreshToken, ValidateRefreshToken>();
 builder.Services.AddScoped<IAuthLoginUseCase, AuthLoginUseCase>();
 
 var app = builder.Build();
