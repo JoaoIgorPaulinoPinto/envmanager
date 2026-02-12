@@ -24,7 +24,7 @@ Content-Type: application/json
 ### 3. Renovar Sessão
 POST {{envmanager_HostAddress}}/auth/refresh
 Content-Type: application/json
-"{{refreshToken}}"
+"aefeb7a7adab4bb19cfc25906726fb25"
 
 
 ### 4. Listar todos os usuários (Requer Access Token)

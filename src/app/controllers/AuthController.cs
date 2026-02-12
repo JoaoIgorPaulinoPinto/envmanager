@@ -1,63 +1,63 @@
 ﻿using envmanager.src.data.utils;
 using envmanager.src.services.interfaces.auth;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using static envmanager.src.data.dtos.AuthDtos;
 
-namespace envmanager.src.app.controllers
+[ApiController]
+[Route("[controller]")]
+public class AuthController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class AuthController : ControllerBase
-    {
-        private readonly IAuthLoginUseCase _authLoginUseCase;
-        private readonly IValidateRefreshToken _validadeRefreshToken;
-        private readonly JWTService _JWTService;
-        public AuthController (IValidateRefreshToken validadeRefreshToken, IAuthLoginUseCase authLoginUseCase, JWTService JWTService)
-        {
-            _authLoginUseCase = authLoginUseCase;
-            _JWTService = JWTService;
-            _validadeRefreshToken = validadeRefreshToken;
-        }
+    private readonly IAuthLoginUseCase _authLoginUseCase;
+    private readonly IValidateRefreshToken _validateRefreshToken;
+    private readonly JWTService _jwtService;
 
-        [HttpPost]
-        public async Task<ActionResult<dynamic>> Login([FromBody] data.dtos.AuthDtos.LoginRequest loginRequest)
+    public AuthController(IValidateRefreshToken validateRefreshToken, IAuthLoginUseCase authLoginUseCase, JWTService jwtService)
+    {
+        _authLoginUseCase = authLoginUseCase;
+        _jwtService = jwtService;
+        _validateRefreshToken = validateRefreshToken;
+    }
+
+    [HttpPost]
+    public async Task<ActionResult> Login([FromBody] LoginRequest loginRequest)
+    {
+
+        var refreshToken = _jwtService.GenerateRefreshToken();
+
+        SetRefreshTokenCookie(refreshToken);
+
+        string token = await _authLoginUseCase.Execute(loginRequest, refreshToken);
+
+        return Ok(new
         {
-            if (string.IsNullOrWhiteSpace(loginRequest?.email) ||
-                string.IsNullOrWhiteSpace(loginRequest?.password))
-            {
-                return BadRequest("Email and password are required..");
-            }
-            var refreshToken = _JWTService.GenerateRefreshToken();
-            Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                Expires = DateTime.UtcNow.AddDays(7)
-            });
-            string token = await _authLoginUseCase.Execute(loginRequest);
-            return Ok(new
-            {
-                message = "Login successfully",
-                token = token
-            });
-        }
-        [AllowAnonymous]
-        [HttpPost("refresh")]
-        public async Task<ActionResult<string>> RefreshSessionToken([FromBody]string refreshToken)
+            message = "Login successfully",
+            token = token
+        });
+    }
+
+    [AllowAnonymous]
+    [HttpPost("refresh")]
+    public async Task<ActionResult> RefreshSessionToken([FromBody] string refreshToken)
+    {
+        string token = await _validateRefreshToken.Execute(refreshToken);
+
+        return Ok(new
         {
-            if (string.IsNullOrWhiteSpace(refreshToken))
-            {
-                return BadRequest("Refresh token is required");
-            }
-            string token = await _validadeRefreshToken.Execute(refreshToken);
-            if (string.IsNullOrEmpty(token)) throw new Exception(message: "Refresh token is invalid");
-            return Ok(new
-            {
-                message = "Refresh successfully",
-                token = token
-            }); ;
-        }
+            message = "Refresh successfully",
+            token = token
+        });
+    }
+
+    private void SetRefreshTokenCookie(string refreshToken)
+    {
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTime.UtcNow.AddDays(7)
+        };
+        Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
     }
 }

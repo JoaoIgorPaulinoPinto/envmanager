@@ -16,5 +16,7 @@ namespace envmanager.src.data.schemes
         public string Password { get; set; } = "";
         [BsonElement("refresh_token")]
         public string RefreshToken { get; set; } = "";
+        [BsonElement("refresh_token_expiry")]
+        public DateTime? RefreshTokenExpiry { get; set; }
     }
 }

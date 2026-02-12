@@ -7,22 +7,25 @@ namespace envmanager.src.services.usecases.user
     public class CreateUserUseCase : ICreateUserUseCase
     {
         private readonly IUserRepository _userRepository;
+
         public CreateUserUseCase(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
+
         public async Task<string> Execute(CreateUserRequest user)
         {
-            try
+            if (user == null)
+                throw new ArgumentException("User data is required.");
+
+            string token = await _userRepository.Create(user);
+
+            if (string.IsNullOrEmpty(token))
             {
-                string token = await _userRepository.Create(user);
-                if (token == null) throw new Exception("The token could not be generated");
-                return token;
+                throw new InvalidOperationException("User was created, but the access token could not be generated.");
             }
-            catch
-            {
-                throw new Exception("Error creating user");
-            }
+
+            return token;
         }
     }
 }

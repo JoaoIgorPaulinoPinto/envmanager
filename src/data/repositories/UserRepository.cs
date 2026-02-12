@@ -12,60 +12,67 @@ namespace envmanager.src.infra.repositories
     {
         private readonly AppDbContext _appDbContext;
         private readonly JWTService _jwtService;
-        public UserRepository(AppDbContext db, JWTService jwtService) {
+        private readonly UserMapping _mapper; 
+
+        public UserRepository(AppDbContext db, JWTService jwtService)
+        {
             _appDbContext = db;
             _jwtService = jwtService;
+            _mapper = new UserMapping();
         }
-
 
         public async Task<List<UsersDtos.GetUsersResponse>> GetAll()
         {
-            List<User> users = await _appDbContext.Users.Find(u => true).ToListAsync();
-            UserMapping mapper = new UserMapping();
-            if(users != null)
+            var users = await _appDbContext.Users.Find(u => true).ToListAsync();
+
+            if (users == null || !users.Any())
             {
-                List<UsersDtos.GetUsersResponse> dtosUserList = new();
-                foreach (var item in users)
-                {
-                    UsersDtos.GetUsersResponse userDto = mapper.SchemaToDTO(item);
-                    dtosUserList.Add(userDto);
-                }
-                return dtosUserList;
+                throw new KeyNotFoundException("No users found in the database.");
             }
-            else
-            {
-                throw new Exception("No users found");
-            }
-                
+
+            return users.Select(user => _mapper.SchemaToDTO(user)).ToList();
         }
 
         public async Task<UsersDtos.GetUsersResponse> GetById(string id)
         {
-            User user = await _appDbContext.Users.Find(u => u.Id == id).FirstOrDefaultAsync();
-            UserMapping mapper = new UserMapping();
-            if (user != null)
+            var user = await _appDbContext.Users.Find(u => u.Id == id).FirstOrDefaultAsync();
+
+            if (user == null)
             {
-               return mapper.SchemaToDTO(user);
+                throw new KeyNotFoundException($"User with ID {id} was not found.");
             }
-            else
-            {
-                throw new Exception("No users found");
-            }
+
+            return _mapper.SchemaToDTO(user);
         }
-        public async Task<string> Create(UsersDtos.CreateUserRequest user)
+
+        public async Task<string> Create(UsersDtos.CreateUserRequest userRequest)
         {
-           string pwd = new SecurityService().GerarHash(user.password);
-             User u = new User();
-            u.Password = pwd;
-            u.UserName = user.user_name;
-            u.Email = user.email;
+            var existingUser = await _appDbContext.Users.Find(u => u.Email == userRequest.email).FirstOrDefaultAsync();
+            if (existingUser != null)
+            {
+                throw new InvalidOperationException("A user with this email already exists.");
+            }
 
-            u.RefreshToken = _jwtService.GenerateRefreshToken();
-            Console.WriteLine(u.RefreshToken);
-            await _appDbContext.Users.InsertOneAsync(u);
+            string hashedPassword = new SecurityService().GerarHash(userRequest.password);
 
-            string token = _jwtService.CreateUserToken(u);
-            if (token == null) throw new Exception("Error on creating the session token");
+            User newUser = new User
+            {
+                Password = hashedPassword,
+                UserName = userRequest.user_name,
+                Email = userRequest.email,
+                RefreshToken = _jwtService.GenerateRefreshToken(),
+                RefreshTokenExpiry = DateTime.UtcNow.AddDays(7) 
+            };
+
+            await _appDbContext.Users.InsertOneAsync(newUser);
+
+            string token = _jwtService.CreateUserToken(newUser);
+
+            if (string.IsNullOrEmpty(token))
+            {
+                throw new InvalidOperationException("Error generating the session token.");
+            }
+
             return token;
         }
     }
