@@ -1,4 +1,5 @@
 ﻿using envmanager.src.services.interfaces.user;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static envmanager.src.infra.dtos.UsersDtos;
 
@@ -16,13 +17,13 @@ namespace envmanager.src.app.controllers
             _getUsersUseCase = getUsersUseCase;
             _createUsersUseCase = createUserUseCase;
         }
-
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<GetUsersResponse>>> Get()
         {
             return Ok(await _getUsersUseCase.Execute());
         }
-
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<GetUsersResponse>> Get([FromRoute] string id)
         {
@@ -31,7 +32,7 @@ namespace envmanager.src.app.controllers
 
             return Ok(await _getUsersUseCase.Execute(id));
         }
-
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<string>> Create([FromBody] CreateUserRequest user)
         {

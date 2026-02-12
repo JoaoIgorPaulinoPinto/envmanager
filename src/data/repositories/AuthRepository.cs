@@ -17,21 +17,25 @@ namespace envmanager.src.data.repositories
             _appDbContext = db;
             _jwtService = jwtService;
         }
-
         public async Task<string> Login(LoginRequest loginRequest)
         {
             var user = await _appDbContext.Users
                 .Find(u => u.Email == loginRequest.email)
                 .FirstOrDefaultAsync();
 
-            if (user == null || user.Password != loginRequest.password)
+            if (user == null)
+            {
+                throw new Exception("E-mail ou senha inválidos.");
+            }
+            var securityService = new SecurityService();
+            bool isPasswordValid = securityService.VerificarSenha(user.Password, loginRequest.password);
+
+            if (!isPasswordValid)
             {
                 throw new Exception("E-mail ou senha inválidos.");
             }
 
-            var token = _jwtService.CreateUserToken(user);
-
-            return token;
+            return _jwtService.CreateUserToken(user);
         }
     }
 }

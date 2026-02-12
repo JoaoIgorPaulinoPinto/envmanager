@@ -1,4 +1,5 @@
 ﻿using envmanager.src.services.interfaces.auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static envmanager.src.data.dtos.AuthDtos;
 
@@ -14,8 +15,9 @@ namespace envmanager.src.app.controllers
             _authLoginUseCase = authLoginUseCase;
         }
 
+        [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult<string>> Login(LoginRequest loginRequest)
+        public async Task<ActionResult<string>> Login([FromBody]LoginRequest loginRequest)
         {
             if (string.IsNullOrWhiteSpace(loginRequest?.email) ||
                 string.IsNullOrWhiteSpace(loginRequest?.password))

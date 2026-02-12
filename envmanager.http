@@ -12,16 +12,15 @@ Accept: application/json
 POST {{envmanager_HostAddress}}/user
 Content-Type: application/json
 {
-  "user_name": "junior",
-  "email": "junior@email.com",
-  "password": "senha_segura"
+  "user_name": "joão2",
+  "email": "joao1@email.com",
+  "password": "senha_segura21"
 }
 
 ### Fazer login na conta
-POST {{envmanager_HostAddress}}/user
+POST {{envmanager_HostAddress}}/auth
 Content-Type: application/json
 {
-  "user_name": "junior",
-  "email": "junior@email.com",
-  "password": "senha_segura"
+  "email": "joao1@email.com",
+  "password": "senha_segura21"
 }
