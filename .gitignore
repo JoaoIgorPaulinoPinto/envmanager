@@ -52,3 +52,9 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+# User-specific settings
+appsettings.Development.json
+appsettings.Local.json
+
+# Secrets folder
+.microsoft/usersecrets/
