@@ -4,6 +4,24 @@
 GET {{envmanager_HostAddress}}/user
 Accept: application/json
 
-### Listar usuário por ID
-GET {{envmanager_HostAddress}}/user/123
+### Listar usuário por ID (Forma correta para [HttpGet("{id}")])
+GET {{envmanager_HostAddress}}/user/698d33b4561c841ebe5c09d4
 Accept: application/json
+
+### Criar usuário e receber Token
+POST {{envmanager_HostAddress}}/user
+Content-Type: application/json
+{
+  "user_name": "junior",
+  "email": "junior@email.com",
+  "password": "senha_segura"
+}
+
+### Fazer login na conta
+POST {{envmanager_HostAddress}}/user
+Content-Type: application/json
+{
+  "user_name": "junior",
+  "email": "junior@email.com",
+  "password": "senha_segura"
+}

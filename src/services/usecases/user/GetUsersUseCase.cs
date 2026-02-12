@@ -1,8 +1,8 @@
 ﻿using envmanager.src.infra.dtos;
 using envmanager.src.infra.interfaces;
-using envmanager.src.services.interfaces;
+using envmanager.src.services.interfaces.user;
 
-namespace envmanager.src.services.usecases
+namespace envmanager.src.services.usecases.user
 {
     public class GetUsersUseCase : IGetUsersUseCase
     {
@@ -17,9 +17,9 @@ namespace envmanager.src.services.usecases
             {
                 return await _userRepository.GetAll();
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception(ex.Message);
+                throw new Exception("Error on get all users");
             }
         }
 
@@ -29,9 +29,9 @@ namespace envmanager.src.services.usecases
             {
                 return await _userRepository.GetById(id);
             }
-            catch (Exception ex)
+            catch 
             {
-                throw new Exception(ex.Message);
+                throw new Exception("Error on get user with id: " + id);
             }
         }
     }

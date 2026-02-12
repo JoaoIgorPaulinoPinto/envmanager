@@ -1,6 +1,6 @@
 ﻿using static envmanager.src.infra.dtos.UsersDtos;
 
-namespace envmanager.src.services.interfaces
+namespace envmanager.src.services.interfaces.user
 {
     public interface IGetUsersUseCase
     {

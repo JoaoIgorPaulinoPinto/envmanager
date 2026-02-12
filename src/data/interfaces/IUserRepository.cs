@@ -6,5 +6,6 @@ namespace envmanager.src.infra.interfaces
     {
         public Task<List<GetUsersResponse>> GetAll();
         public Task<GetUsersResponse> GetById(string id);
+        public Task<string> Create(CreateUserRequest user);
     }
 }

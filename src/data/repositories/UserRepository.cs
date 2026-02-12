@@ -11,9 +11,12 @@ namespace envmanager.src.infra.repositories
     public class UserRepository : IUserRepository
     {
         private readonly AppDbContext _appDbContext;
-        public UserRepository(AppDbContext db) {
+        private readonly JWTService _jwtService;
+        public UserRepository(AppDbContext db, JWTService jwtService) {
             _appDbContext = db;
-        } 
+            _jwtService = jwtService;
+        }
+
 
         public async Task<List<UsersDtos.GetUsersResponse>> GetAll()
         {
@@ -48,6 +51,20 @@ namespace envmanager.src.infra.repositories
             {
                 throw new Exception("No users found");
             }
+        }
+        public async Task<string> Create(UsersDtos.CreateUserRequest user)
+        {
+           string pwd = new SecurityService().GerarHash(user.password);
+             User u = new User();
+            u.Password = pwd;
+            u.UserName = user.user_name;
+            u.Email = user.email;
+
+            await _appDbContext.Users.InsertOneAsync(u);
+
+            string token = _jwtService.CreateUserToken(u);
+            if (token == null) throw new Exception("Error on creating the session token");
+            return token;
         }
     }
 }
