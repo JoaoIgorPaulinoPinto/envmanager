@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using static envmanager.src.data.service.dtos.KeyDTos;
+using static envmanager.src.data.service.dtos.MemberDtos;
 
 namespace envmanager.src.data.service.dtos
 {
@@ -19,15 +20,27 @@ namespace envmanager.src.data.service.dtos
         }
         public record GetProjectsResponse
         {
+            public bool isOwner { get; set; } = false;
             public string id { get; set; } = string.Empty;
             public string name { get; set; } = string.Empty;
+            public string access_link { get; set; } = string.Empty;
             public string description { get; set; } = string.Empty;
         }
         public record GetProjectByIdResponse
         {
+            [Required]
             public string id { get; set; } = string.Empty;
+            [Required]
             public string name { get; set; } = string.Empty;
+            [Required]
             public string description { get; set; } = string.Empty;
+            [Required]
+            public bool isOwner { get; set; } = false;
+            [Required]
+            public string access_link { get; set; } = string.Empty;
+            [Required]
+            public List<GetMemberResponse> members { get; set; } = new List<GetMemberResponse>();
+            [Required]
             public List<GetVariableResponse> variables { get; set; } = [];
         }
 
@@ -38,10 +51,6 @@ namespace envmanager.src.data.service.dtos
             public string project_id { get; set; } = string.Empty;
             [Required(ErrorMessage = "Some variable is required to update project's variables.")]
             public List<CreateVariableRequest> variables { get; set; } = [];
-        }
-        public record UpdateVariablesResponse
-        {
-           public string message { get; } = "Updated sucefully!";
         }
     }
 }

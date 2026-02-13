@@ -1,5 +1,5 @@
 @envmanager_HostAddress = http://localhost:5115
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OGRmY2ZlNmIzMTdlNDQ5MzExZTM5MiIsImVtYWlsIjoiam9hb2lnb3JwYXVsaW5vcGludG81QGVtYWlsLmNvbSIsImp0aSI6IjIwYTI4ZTc2LWMzZjktNDhmMi1iNWM3LTY4MzNmMjA1ZDk5ZCIsImV4cCI6MTc3MDk5MjM0NiwiaXNzIjoiZW52bWFuYWdlcl9hcGkiLCJhdWQiOiJlbnZtYW5hZ2VyX2FwaSJ9.linoSYp1nN9yZPgOJJ18DJ2n6EvKCKW_aH40rD1OkV4
+@accessToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OGRmY2ZlNmIzMTdlNDQ5MzExZTM5MiIsImVtYWlsIjoiam9hb2lnb3JwYXVsaW5vcGludG81QGVtYWlsLmNvbSIsImp0aSI6IjdjOTFmZjY0LWZlZTMtNDFjZC04MDlmLTcwOTJhODdmMGU2YyIsImV4cCI6MTc3MTAxOTI2NSwiaXNzIjoiZW52bWFuYWdlcl9hcGkiLCJhdWQiOiJlbnZtYW5hZ2VyX2FwaSJ9.YPaLA8KGXIYiuxAq2dGYlaJao-06fPZuvuRDpkouVyE
 @refreshToken = 74f3526ecb92448bb83e8309cefab432
 
 ### 1. Criar usuário (Cadastro)
@@ -22,7 +22,9 @@ Content-Type: application/json
 ### 3. Renovar Sessão (Corrigido)
 POST {{envmanager_HostAddress}}/auth/refresh
 Content-Type: application/json
-{{{refreshToken}}}
+{
+  "refreshToken" : {{{refreshToken}}}
+}
 
 
 ### 4. Listar todos os usuários
@@ -36,9 +38,9 @@ POST {{envmanager_HostAddress}}/project
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 {
-  "name": "That's Project",
-  "description": "A project of a project that is a project",
-  "password": "123456"
+  "name": "aprojectwhithmember",
+  "description": "Enviroment variables management in a center",
+  "password": "",
 }
 
 ### 6. Pegar projetos
@@ -47,7 +49,7 @@ Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### 6. Pegar projetos
-GET {{envmanager_HostAddress}}/project/698f2ba4ab4bc4b74f30fca8
+GET {{envmanager_HostAddress}}/project/698f9784b85029080460dc67
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -56,9 +58,9 @@ PUT {{envmanager_HostAddress}}/project
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 {
-  "project_id": "698f2ba4ab4bc4b74f30fca8",
+  "project_id": "698f9512b85029080460dc64",
   "variables":[
-      {"id":"88da4e09-436f-4763-bfd5-0459c16ff941",
+      {
       "variable":"DEFAULT_API_KEY",
       "value": "http://localhost:3000/"}
   ]

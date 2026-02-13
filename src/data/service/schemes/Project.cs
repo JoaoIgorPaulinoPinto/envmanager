@@ -22,8 +22,12 @@ namespace envmanager.src.data.service.schemes
         [PasswordPropertyText]
         [MinLength(6), MaxLength(255)] 
         public string? Password { get; set; } = "";
-
         [BsonElement("variables")]
-        public List<Key> Variables { get; set; } = new List<Key>()  ;
+        public List<Key> Variables { get; set; } = new List<Key>();
+        [BsonElement("members")]
+        public List<ProjectMember> Members { get; set; } = new List<ProjectMember>();
+        [BsonElement("access_link")]
+        [MinLength(1), MaxLength(255)]
+        public string AccesLink { get; set; } = "";
     }
 }
