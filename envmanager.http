@@ -1,5 +1,5 @@
 @envmanager_HostAddress = http://localhost:5115
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OGRmY2ZlNmIzMTdlNDQ5MzExZTM5MiIsImVtYWlsIjoiam9hb2lnb3JwYXVsaW5vcGludG81QGVtYWlsLmNvbSIsImp0aSI6IjIzNWQ2ZTg1LTBlZjUtNDczNy04YmFkLTkyNzAzNzFiYWMxOCIsImV4cCI6MTc3MDk1MTAyOSwiaXNzIjoiZW52bWFuYWdlcl9hcGkiLCJhdWQiOiJlbnZtYW5hZ2VyX2FwaSJ9.Hil2KkqsJc3S3gdKUBiLTfiaDEDvMSv7lSRP4_JemCY
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OGRmY2ZlNmIzMTdlNDQ5MzExZTM5MiIsImVtYWlsIjoiam9hb2lnb3JwYXVsaW5vcGludG81QGVtYWlsLmNvbSIsImp0aSI6IjIwYTI4ZTc2LWMzZjktNDhmMi1iNWM3LTY4MzNmMjA1ZDk5ZCIsImV4cCI6MTc3MDk5MjM0NiwiaXNzIjoiZW52bWFuYWdlcl9hcGkiLCJhdWQiOiJlbnZtYW5hZ2VyX2FwaSJ9.linoSYp1nN9yZPgOJJ18DJ2n6EvKCKW_aH40rD1OkV4
 @refreshToken = 74f3526ecb92448bb83e8309cefab432
 
 ### 1. Criar usuário (Cadastro)
@@ -14,7 +14,6 @@ Content-Type: application/json
 ### 2. Fazer Login 
 POST {{envmanager_HostAddress}}/auth
 Content-Type: application/json
-
 {
   "email": "joaoigorpaulinopinto5@email.com",
   "password": "123456"
@@ -32,18 +31,35 @@ Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 
-### 1. Criar projeto
+### 5. Criar projeto
 POST {{envmanager_HostAddress}}/project
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
-
 {
   "name": "That's Project",
   "description": "A project of a project that is a project",
   "password": "123456"
 }
 
-### 1. Pegar projetos
+### 6. Pegar projetos
 GET {{envmanager_HostAddress}}/project
 Accept: application/json
 Authorization: Bearer {{accessToken}}
+
+### 6. Pegar projetos
+GET {{envmanager_HostAddress}}/project/698f2ba4ab4bc4b74f30fca8
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### 7. Atualiza variaveis do projeto
+PUT {{envmanager_HostAddress}}/project
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+{
+  "project_id": "698f2ba4ab4bc4b74f30fca8",
+  "variables":[
+      {"id":"88da4e09-436f-4763-bfd5-0459c16ff941",
+      "variable":"DEFAULT_API_KEY",
+      "value": "http://localhost:3000/"}
+  ]
+}

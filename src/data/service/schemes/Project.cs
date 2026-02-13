@@ -24,6 +24,6 @@ namespace envmanager.src.data.service.schemes
         public string? Password { get; set; } = "";
 
         [BsonElement("variables")]
-        public Key[] Variables { get; set; } = [];
+        public List<Key> Variables { get; set; } = new List<Key>()  ;
     }
 }

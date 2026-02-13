@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "r118Gn0Sl6g=",
+  "dgSpecHash": "wbXYC7HTknA=",
   "success": true,
   "projectFilePath": "C:\\Users\\Joao\\source\\repos\\envmanager\\envmanager\\envmanager.csproj",
   "expectedPackageFiles": [
@@ -16,6 +16,7 @@
     "C:\\Users\\Joao\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512",
     "C:\\Users\\Joao\\.nuget\\packages\\mongodb.bson\\3.6.0\\mongodb.bson.3.6.0.nupkg.sha512",
     "C:\\Users\\Joao\\.nuget\\packages\\mongodb.driver\\3.6.0\\mongodb.driver.3.6.0.nupkg.sha512",
+    "C:\\Users\\Joao\\.nuget\\packages\\scalar.aspnetcore\\1.2.76\\scalar.aspnetcore.1.2.76.nupkg.sha512",
     "C:\\Users\\Joao\\.nuget\\packages\\sharpcompress\\0.30.1\\sharpcompress.0.30.1.nupkg.sha512",
     "C:\\Users\\Joao\\.nuget\\packages\\snappier\\1.0.0\\snappier.1.0.0.nupkg.sha512",
     "C:\\Users\\Joao\\.nuget\\packages\\system.identitymodel.tokens.jwt\\8.15.0\\system.identitymodel.tokens.jwt.8.15.0.nupkg.sha512",

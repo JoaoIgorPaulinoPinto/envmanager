@@ -11,6 +11,8 @@ using envmanager.src.data.service.interfaces;
 using envmanager.src.data.infra.db;
 using envmanager.src.services.interfaces.project;
 using envmanager.src.services.usecases.project;
+using Scalar.AspNetCore;
+using envmanager.src.services.interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,6 +65,7 @@ builder.Services.AddScoped<IValidateRefreshToken, ValidateRefreshToken>();
 builder.Services.AddScoped<IAuthLoginUseCase, AuthLoginUseCase>();
 builder.Services.AddScoped<IGetProjectsUseCase, GetProjectsUseCase>();
 builder.Services.AddScoped<ICreateProjectUseCase, CreateProjectUseCase>();
+builder.Services.AddScoped<IUpdateProjectVariables, UpdateProjectVariables>();
 
 var app = builder.Build();
 
@@ -70,13 +73,13 @@ app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.MapOpenApi();app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication(); // 2. Identifica o usuário
-app.UseAuthorization();  // 3. Verifica permissões
+app.UseAuthentication();  
+app.UseAuthorization();
 
 app.MapControllers();
 

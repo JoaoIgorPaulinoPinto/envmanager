@@ -6,6 +6,7 @@ using envmanager.src.data.utils;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using static envmanager.src.data.service.dtos.KeyDTos;
 using static envmanager.src.data.service.dtos.ProjectDtos;
 
 namespace envmanager.src.data.service.repositories
@@ -49,6 +50,63 @@ namespace envmanager.src.data.service.repositories
                 name = p.ProjectName,
                 description = p.Description
             }).ToList();
+        }
+
+        public async Task<GetProjectByIdResponse> GetProjectById(string userId, string projId)
+        {
+            var project = await _appDbContext.Projects
+                .Find(p => p.UserId == userId && p.Id == projId).FirstOrDefaultAsync();
+                
+            if (project == null)
+            {
+                throw new KeyNotFoundException("No projects found in the database.");
+            }
+
+            return new GetProjectByIdResponse
+
+            {
+                id = project.Id,
+                name = project.ProjectName,
+                description = project.Description,
+                variables = project.Variables.Select(v => new GetVariableResponse { id = v.Id, variable = v.Variable, Value = v.Value}).ToList(),
+            };
+        }
+
+        public async Task<bool> UpdateVariables(UpdateVariablesRequest updateVariablesRequest, string userId)
+        {
+            var project = await _appDbContext.Projects
+                .Find(p => p.UserId == userId && p.Id == updateVariablesRequest.project_id)
+                .FirstOrDefaultAsync();
+
+            if (project == null) throw new KeyNotFoundException("Project not found.");
+            project.Variables ??= new List<Key>();
+
+            foreach (var incomingVar in updateVariablesRequest.variables)
+            {
+                var existingKey = project.Variables.FirstOrDefault(k => k.Id == incomingVar.id);
+
+                if (existingKey != null)
+                {
+                    existingKey.Value = incomingVar.Value;
+                    existingKey.Variable = incomingVar.variable;
+                }
+                else
+                {
+                    project.Variables.Add(new Key
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Value = incomingVar.Value,
+                        Variable = incomingVar.variable
+                    });
+                }
+            }
+
+            var filter = Builders<Project>.Filter.Eq(p => p.Id, project.Id);
+            var update = Builders<Project>.Update.Set(p => p.Variables, project.Variables);
+
+            var result = await _appDbContext.Projects.UpdateOneAsync(filter, update);
+
+            return result.ModifiedCount > 0;
         }
     }
 }

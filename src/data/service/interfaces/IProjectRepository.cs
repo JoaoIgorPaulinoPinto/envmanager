@@ -7,5 +7,7 @@ namespace envmanager.src.data.service.interfaces
     {
         public Task<bool> CreateProject(CreateProjectRequest createProjectRequest, string userId);
         public Task<List<GetProjectsResponse>> GetProjects(string userId);
+        public Task<GetProjectByIdResponse> GetProjectById(string userId, string projId);
+        public Task<bool> UpdateVariables(UpdateVariablesRequest updateVariablesRequest, string projId);
     }
 }
