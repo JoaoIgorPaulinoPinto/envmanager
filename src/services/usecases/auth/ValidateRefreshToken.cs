@@ -1,4 +1,4 @@
-﻿using envmanager.src.data.interfaces;
+﻿using envmanager.src.data.service.interfaces;
 using envmanager.src.services.interfaces.auth;
 
 namespace envmanager.src.services.usecases.auth

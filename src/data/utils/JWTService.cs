@@ -1,4 +1,4 @@
-﻿using envmanager.src.data.schemes;
+﻿using envmanager.src.data.service.schemes;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -13,7 +13,6 @@ namespace envmanager.src.data.utils
 
         public JWTService(IConfiguration configuration)
         {
-            // Error messages in English for consistency
             _key = configuration["Jwt:Key"] ?? throw new ArgumentNullException(nameof(configuration), "JWT Key is not configured in appsettings.json.");
             _issuer = configuration["Jwt:Issuer"] ?? throw new ArgumentNullException(nameof(configuration), "JWT Issueris not configured in appsettings.json.");
         }

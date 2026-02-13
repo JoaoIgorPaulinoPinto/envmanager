@@ -5,7 +5,7 @@ namespace envmanager.src.data.utils
     public class SecurityService
     {
         private readonly PasswordHasher<string> _passwordHasher = new PasswordHasher<string>();
-
+        
         public string HashPassword(string password)
         {
             if (string.IsNullOrWhiteSpace(password))

@@ -2,7 +2,7 @@
 using envmanager.src.services.interfaces.auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static envmanager.src.data.dtos.AuthDtos;
+using static envmanager.src.data.service.dtos.AuthDtos;
 
 [ApiController]
 [Route("[controller]")]

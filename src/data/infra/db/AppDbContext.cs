@@ -1,7 +1,7 @@
-﻿using envmanager.src.data.schemes;
+﻿using envmanager.src.data.service.schemes;
 using MongoDB.Driver;
 
-namespace envmanager.src.infra.db
+namespace envmanager.src.data.infra.db
 {
  
         public class AppDbContext
@@ -13,9 +13,10 @@ namespace envmanager.src.infra.db
                 var connectionString = configuration.GetConnectionString("MongoDb");
                 var client = new MongoClient(connectionString);
 
-                _database = client.GetDatabase("BuildoraDataBase");
+                _database = client.GetDatabase(configuration.GetConnectionString("DataBaseName"));
             }
 
             public IMongoCollection<User> Users => _database.GetCollection<User>("user");
+            public IMongoCollection<Project> Projects => _database.GetCollection<Project>("project");
     }
 }

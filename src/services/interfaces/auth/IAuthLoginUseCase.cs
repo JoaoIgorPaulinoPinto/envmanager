@@ -1,4 +1,4 @@
-﻿using static envmanager.src.data.dtos.AuthDtos;
+﻿using static envmanager.src.data.service.dtos.AuthDtos;
 
 namespace envmanager.src.services.interfaces.auth
 {

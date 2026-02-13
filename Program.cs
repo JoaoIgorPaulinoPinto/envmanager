@@ -1,9 +1,4 @@
-using envmanager.src.data.interfaces;
-using envmanager.src.data.repositories;
 using envmanager.src.data.utils;
-using envmanager.src.infra.db;
-using envmanager.src.infra.interfaces;
-using envmanager.src.infra.repositories;
 using envmanager.src.services.interfaces.auth;
 using envmanager.src.services.interfaces.user;
 using envmanager.src.services.usecases.auth;
@@ -11,6 +6,11 @@ using envmanager.src.services.usecases.user;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
+using envmanager.src.data.service.repositories;
+using envmanager.src.data.service.interfaces;
+using envmanager.src.data.infra.db;
+using envmanager.src.services.interfaces.project;
+using envmanager.src.services.usecases.project;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +53,7 @@ builder.Services.AddSingleton<SecurityService>();
 
 // --- Repositories ---
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
 // --- Use Cases ---
@@ -60,6 +61,8 @@ builder.Services.AddScoped<IGetUsersUseCase, GetUsersUseCase>();
 builder.Services.AddScoped<ICreateUserUseCase, CreateUserUseCase>();
 builder.Services.AddScoped<IValidateRefreshToken, ValidateRefreshToken>();
 builder.Services.AddScoped<IAuthLoginUseCase, AuthLoginUseCase>();
+builder.Services.AddScoped<IGetProjectsUseCase, GetProjectsUseCase>();
+builder.Services.AddScoped<ICreateProjectUseCase, CreateProjectUseCase>();
 
 var app = builder.Build();
 

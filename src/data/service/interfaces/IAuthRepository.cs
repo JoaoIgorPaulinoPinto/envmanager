@@ -1,7 +1,6 @@
-﻿
-using static envmanager.src.data.dtos.AuthDtos;
+﻿using static envmanager.src.data.service.dtos.AuthDtos;
 
-namespace envmanager.src.data.interfaces
+namespace envmanager.src.data.service.interfaces
 {
     public interface IAuthRepository
     {

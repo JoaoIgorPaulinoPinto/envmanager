@@ -1,7 +1,7 @@
-﻿using envmanager.src.data.schemes;
-using envmanager.src.infra.dtos;
+﻿using envmanager.src.data.service.dtos;
+using envmanager.src.data.service.schemes;
 
-namespace envmanager.src.infra.mappers
+namespace envmanager.src.data.service.mappers
 {
     public class UserMapping
     {

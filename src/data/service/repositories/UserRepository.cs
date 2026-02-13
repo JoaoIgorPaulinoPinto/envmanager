@@ -1,23 +1,25 @@
-﻿using envmanager.src.data.schemes;
+﻿using envmanager.src.data.infra.db;
+using envmanager.src.data.service.dtos;
+using envmanager.src.data.service.interfaces;
+using envmanager.src.data.service.mappers;
+using envmanager.src.data.service.schemes;
 using envmanager.src.data.utils;
-using envmanager.src.infra.db;
-using envmanager.src.infra.dtos;
-using envmanager.src.infra.interfaces;
-using envmanager.src.infra.mappers;
 using MongoDB.Driver;
 
-namespace envmanager.src.infra.repositories
+namespace envmanager.src.data.service.repositories
 {
     public class UserRepository : IUserRepository
     {
         private readonly AppDbContext _appDbContext;
         private readonly JWTService _jwtService;
+        private readonly SecurityService _securityService;
         private readonly UserMapping _mapper; 
 
-        public UserRepository(AppDbContext db, JWTService jwtService)
+        public UserRepository(AppDbContext db, JWTService jwtService, SecurityService securityService)
         {
             _appDbContext = db;
             _jwtService = jwtService;
+            _securityService = securityService;
             _mapper = new UserMapping();
         }
 
@@ -53,7 +55,7 @@ namespace envmanager.src.infra.repositories
                 throw new InvalidOperationException("A user with this email already exists.");
             }
 
-            string hashedPassword = new SecurityService().GerarHash(userRequest.password);
+            string hashedPassword = _securityService.HashPassword(userRequest.password);
 
             User newUser = new User
             {

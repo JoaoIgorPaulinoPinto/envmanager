@@ -1,7 +1,7 @@
 ﻿using DnsClient;
-using envmanager.src.data.interfaces;
+using envmanager.src.data.service.interfaces;
 using envmanager.src.services.interfaces.auth;
-using static envmanager.src.data.dtos.AuthDtos;
+using static envmanager.src.data.service.dtos.AuthDtos;
 
 public class AuthLoginUseCase : IAuthLoginUseCase
 {

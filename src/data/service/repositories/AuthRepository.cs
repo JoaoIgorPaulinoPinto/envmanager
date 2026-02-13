@@ -1,11 +1,11 @@
-﻿using envmanager.src.data.interfaces;
-using envmanager.src.data.utils;
-using envmanager.src.infra.db;
-using static envmanager.src.data.dtos.AuthDtos;
+﻿using envmanager.src.data.utils;
+using static envmanager.src.data.service.dtos.AuthDtos;
 using MongoDB.Driver;
-using envmanager.src.data.schemes;
+using envmanager.src.data.service.interfaces;
+using envmanager.src.data.service.schemes;
+using envmanager.src.data.infra.db;
 
-namespace envmanager.src.data.repositories
+namespace envmanager.src.data.service.repositories
 {
     public class AuthRepository : IAuthRepository
     {
@@ -30,7 +30,7 @@ namespace envmanager.src.data.repositories
             }
 
             var securityService = new SecurityService();
-            bool isPasswordValid = securityService.VerificarSenha(user.Password, loginRequest.password);
+            bool isPasswordValid = securityService.VerifyPassword(user.Password, loginRequest.password);
 
             if (!isPasswordValid)
             {

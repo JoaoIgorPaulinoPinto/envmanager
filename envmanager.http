@@ -1,39 +1,49 @@
 @envmanager_HostAddress = http://localhost:5115
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OGRkNmRmZTMxMDBiOTMwNjY0ZWRlNCIsImV4cCI6MTc3MDk4OTY2MywiaXNzIjoiZW52bWFuYWdlcl9hcGkiLCJhdWQiOiJlbnZtYW5hZ2VyX2FwaSJ9.GJXWw42x3wr21f1hR8EhVkLGkqTmnD6xNwofyyTCcr4
-@refreshToken = aefeb7a7adab4bb19cfc25906726fb25
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OGRmY2ZlNmIzMTdlNDQ5MzExZTM5MiIsImVtYWlsIjoiam9hb2lnb3JwYXVsaW5vcGludG81QGVtYWlsLmNvbSIsImp0aSI6IjIzNWQ2ZTg1LTBlZjUtNDczNy04YmFkLTkyNzAzNzFiYWMxOCIsImV4cCI6MTc3MDk1MTAyOSwiaXNzIjoiZW52bWFuYWdlcl9hcGkiLCJhdWQiOiJlbnZtYW5hZ2VyX2FwaSJ9.Hil2KkqsJc3S3gdKUBiLTfiaDEDvMSv7lSRP4_JemCY
+@refreshToken = 74f3526ecb92448bb83e8309cefab432
 
 ### 1. Criar usuário (Cadastro)
 POST {{envmanager_HostAddress}}/user
 Content-Type: application/json
 {
-  "user_name": "joão2",
-  "email": "joao1@email.com",
-  "password": "senha_segura21"
+  "user_name": "Joao Igor Paulino Pinto",
+  "email": "joaoigorpaulinopinto5@email.com",
+  "password": "123456"
 }
-
 
 ### 2. Fazer Login 
 POST {{envmanager_HostAddress}}/auth
 Content-Type: application/json
+
 {
-  "email": "joao1@email.com",
-  "password": "senha_segura21"
+  "email": "joaoigorpaulinopinto5@email.com",
+  "password": "123456"
 }
 
-
-### 3. Renovar Sessão
+### 3. Renovar Sessão (Corrigido)
 POST {{envmanager_HostAddress}}/auth/refresh
 Content-Type: application/json
-"aefeb7a7adab4bb19cfc25906726fb25"
+{{{refreshToken}}}
 
 
-### 4. Listar todos os usuários (Requer Access Token)
+### 4. Listar todos os usuários
 GET {{envmanager_HostAddress}}/user
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 
-### 5. Listar usuário por ID (Requer Access Token)
-GET {{envmanager_HostAddress}}/user/698d33b4561c841ebe5c09d4
+### 1. Criar projeto
+POST {{envmanager_HostAddress}}/project
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "name": "That's Project",
+  "description": "A project of a project that is a project",
+  "password": "123456"
+}
+
+### 1. Pegar projetos
+GET {{envmanager_HostAddress}}/project
 Accept: application/json
 Authorization: Bearer {{accessToken}}

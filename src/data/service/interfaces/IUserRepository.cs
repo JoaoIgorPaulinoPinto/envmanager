@@ -1,6 +1,6 @@
-﻿using static envmanager.src.infra.dtos.UsersDtos;
+﻿using static envmanager.src.data.service.dtos.UsersDtos;
 
-namespace envmanager.src.infra.interfaces
+namespace envmanager.src.data.service.interfaces
 {
     public interface IUserRepository
     {

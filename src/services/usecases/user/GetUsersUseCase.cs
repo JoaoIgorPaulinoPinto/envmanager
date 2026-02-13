@@ -1,5 +1,5 @@
-﻿using envmanager.src.infra.dtos;
-using envmanager.src.infra.interfaces;
+﻿using envmanager.src.data.service.dtos;
+using envmanager.src.data.service.interfaces;
 using envmanager.src.services.interfaces.user;
 
 namespace envmanager.src.services.usecases.user
