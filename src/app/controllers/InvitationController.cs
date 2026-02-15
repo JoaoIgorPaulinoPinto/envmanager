@@ -11,9 +11,9 @@ namespace envmanager.src.app.controllers
     public class InvitationController : ControllerBase
     {
         private readonly ICreateInviteUseCase _createInvitationUseCase;
-        private readonly IResponseInvitation _acceptProjectInvite;
+        private readonly IResponseInvitationUseCase _acceptProjectInvite;
 
-        public InvitationController(ICreateInviteUseCase createInvitationUseCase, IResponseInvitation acceptProjectInvite)
+        public InvitationController(ICreateInviteUseCase createInvitationUseCase, IResponseInvitationUseCase acceptProjectInvite)
         {
             _acceptProjectInvite = acceptProjectInvite;
             _createInvitationUseCase = createInvitationUseCase;
@@ -24,7 +24,7 @@ namespace envmanager.src.app.controllers
         [HttpPost]
         public async Task<IActionResult> CreateInvite([FromBody] CreateInviteRequest request)
         {
-            var result = await _createInvitationUseCase.Execute(request);
+            var result = await _createInvitationUseCase.Execute(request, userId);
 
             return Ok(new
             {

@@ -11,27 +11,30 @@ namespace envmanager.src.app.controllers
     {
         private readonly ICreateProjectUseCase _createProjectUseCase;
         private readonly IGetProjectsUseCase _getProjectsUseCase;
-        private readonly IUpdateProjectVariables _updateProjectVariables;
-        private readonly IUpdateProjectName _updateProjectName;
-        private readonly IUpdateProjectDescription _updateProjectDescription;
+        private readonly IUpdateProjectVariablesUseCase _updateProjectVariablesUseCase;
+        private readonly IUpdateProjectNameUseCase _updateProjectNameUseCase;
+        private readonly IUpdateProjectDescriptionUseCase _updateProjectDescriptionUseCase;
+        private readonly ITurnIntoAdminUseCase _turnIntoAdminUseCase;
 
         public ProjectController(
-                IUpdateProjectVariables updateProjectVariables,
+            ITurnIntoAdminUseCase turnIntoAdminUseCase,
+                IUpdateProjectVariablesUseCase updateProjectVariables,
                 IGetProjectsUseCase getProjectsUseCase,
                 ICreateProjectUseCase createProjectUseCase,
-                IUpdateProjectName updateProjectName,
-                IUpdateProjectDescription updateProjectDescription
+                IUpdateProjectNameUseCase updateProjectName,
+                IUpdateProjectDescriptionUseCase updateProjectDescription
                 )
         {
-            _updateProjectVariables = updateProjectVariables;
-            _updateProjectName = updateProjectName;
+            _turnIntoAdminUseCase = turnIntoAdminUseCase;
+            _updateProjectVariablesUseCase = updateProjectVariables;
+            _updateProjectNameUseCase = updateProjectName;
             _createProjectUseCase = createProjectUseCase;
             _getProjectsUseCase = getProjectsUseCase;
-            _updateProjectDescription = updateProjectDescription;
+            _updateProjectDescriptionUseCase = updateProjectDescription;
         }
 
         private string userId => User.Claims.FirstOrDefault(c => c.Type == "id")?.Value
-                           ?? throw new UnauthorizedAccessException("Usuário inválido no token.");
+                           ?? throw new UnauthorizedAccessException("Invalid user on the token.");
 
         [Authorize]
         [HttpPost]
@@ -56,15 +59,15 @@ namespace envmanager.src.app.controllers
         [HttpPut("variables")]
         public async Task<ActionResult> UpdateVariables([FromBody] UpdateVariablesRequest updateVariablesRequest)
         {
-            var updated = await _updateProjectVariables.Execute(updateVariablesRequest, userId);
-            return Ok(new { message = "Project successfully created" });
+            var updated = await _updateProjectVariablesUseCase.Execute(updateVariablesRequest, userId);
+            return Ok(new { message = "Variables successfully updated" });
         }
         [Authorize]
         [HttpPut("update")]
         public async Task<ActionResult> UpdateProjectNameAndDescription([FromBody] UpdateNameAndDescriptionRequest updateVariablesRequest)
         {
-            bool name = await _updateProjectName.Execute(updateVariablesRequest.project_name, updateVariablesRequest.project_id);
-            bool desc = await _updateProjectDescription.Execute(updateVariablesRequest.project_description, updateVariablesRequest.project_id);
+            bool name = await _updateProjectNameUseCase.Execute(updateVariablesRequest.project_name, updateVariablesRequest.project_id);
+            bool desc = await _updateProjectDescriptionUseCase.Execute(updateVariablesRequest.project_description, updateVariablesRequest.project_id);
             if (name || desc)
             {
                 return Ok(new { message = "Project successfully updated" });
@@ -72,6 +75,20 @@ namespace envmanager.src.app.controllers
             else
             {
                 return Ok(new { message = "Nothing updated" });
+            }
+        }
+        [Authorize]
+        [HttpPut("admin")]
+        public async Task<ActionResult> TurnMemberToAdmin([FromBody] TurnIntoAdminRequest request)
+        {
+            bool result = await _turnIntoAdminUseCase.Execute(request, userId);
+            if (result)
+            {
+                return Ok(new { message = "Member promoted to administrator suceffuly" });
+            }
+            else
+            {
+                return Ok(new { message = "Nothin updated" });
             }
         }
     }

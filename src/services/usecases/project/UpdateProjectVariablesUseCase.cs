@@ -5,10 +5,10 @@ using static envmanager.src.data.service.dtos.ProjectDtos;
 
 namespace envmanager.src.services.usecases.project
 {
-    public class UpdateProjectVariables : IUpdateProjectVariables
+    public class UpdateProjectVariablesUseCase : IUpdateProjectVariablesUseCase
     {
         private readonly IProjectRepository _projectRepository;
-        public UpdateProjectVariables(IProjectRepository projectRepository)
+        public UpdateProjectVariablesUseCase(IProjectRepository projectRepository)
         {
             _projectRepository = projectRepository;
         }

@@ -1,5 +1,5 @@
 ﻿@envmanager_HostAddress = http://localhost:5115
-@accessToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTEyYjRhZTU3Yzg3MjBjOWE3Njc3MyIsImVtYWlsIjoiam9hb2lnb3JwYXVsaW5vcGludG8yMDA2QGVtYWlsLmNvbSIsImp0aSI6IjBmMzhmNGRjLTM1ZWYtNGM5OS1hOGZhLTgzOTFmOTExNzRhOSIsImV4cCI6MTc3MTE2NzY5MCwiaXNzIjoiZW52bWFuYWdlcl9hcGkiLCJhdWQiOiJlbnZtYW5hZ2VyX2FwaSJ9.B5bC9373pHIubzDxXXUvD2icCoxG9ScB74DYuwiTWPg
+@accessToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTEyYjRhZTU3Yzg3MjBjOWE3Njc3MyIsImVtYWlsIjoiam9hb2lnb3JwYXVsaW5vcGludG8yMDA2QGVtYWlsLmNvbSIsImp0aSI6ImZjYjk0MDU1LWQ4OTYtNDVkOS05NDkwLTkwNTc2YzgzZGNhNSIsImV4cCI6MTc3MTE4NzAyNiwiaXNzIjoiZW52bWFuYWdlcl9hcGkiLCJhdWQiOiJlbnZtYW5hZ2VyX2FwaSJ9.OH6CQPxTs0C2Y38O6SqZKiOP7kPbvt0s5oKNFUPPQz0
 @refreshToken = 2f99873eb9fc442bab28d1d078e2383c
 
 ### 1. Criar usuario (Cadastro)
@@ -17,7 +17,7 @@ POST {{envmanager_HostAddress}}/auth
 Content-Type: application/json
 {
   "email": "joaoigorpaulinopinto5@email.com",
-  "password": "123456"
+  "password": "123123"
 }
 
 ### 3. Renovar Sessao
@@ -74,8 +74,7 @@ POST {{envmanager_HostAddress}}/invite
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 {
-  "invited_user_id": "698f295bab4bc4b74f30fca4",
-  "inviter_user_id": "69912b4ae57c8720c9a76773",
+  "invited_user_id": "698dfcfe6b317e449311e392",
   "project_id": "6991dcbb00700a42c6e55af2"
 }
 
@@ -84,7 +83,7 @@ POST {{envmanager_HostAddress}}/invite/answer
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 {
-  "token" :"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbnZpdGVySWQiOiI2OTkxMmI0YWU1N2M4NzIwYzlhNzY3NzMiLCJpbnZpdGVkSWQiOiI2OThmMjk1YmFiNGJjNGI3NGYzMGZjYTQiLCJwcm9qZWN0SWQiOiI2OTkxZGNiYjAwNzAwYTQyYzZlNTVhZjIiLCJqdGkiOiI1Mzg0N2YyOS0yM2I5LTQ3N2UtYjA0MC05NjJkOWFiYTgyZWMiLCJleHAiOjE3NzEyNTM2MDUsImlzcyI6ImVudm1hbmFnZXJfYXBpIiwiYXVkIjoiZW52bWFuYWdlcl9hcGkifQ.TvRraSerEb0j9sFgCFXdvimnUGqHNEei_r8FBnQJXAo",
+  "token" :"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbnZpdGVySWQiOiI2OTkxMmI0YWU1N2M4NzIwYzlhNzY3NzMiLCJpbnZpdGVkSWQiOiI2OThkZmNmZTZiMzE3ZTQ0OTMxMWUzOTIiLCJwcm9qZWN0SWQiOiI2OTkxZGNiYjAwNzAwYTQyYzZlNTVhZjIiLCJqdGkiOiI3ZmRiNzljNS0yODFhLTRjM2MtYWMyZS1iNjEwNzFhNTExYzEiLCJleHAiOjE3NzEyNzI5OTEsImlzcyI6ImVudm1hbmFnZXJfYXBpIiwiYXVkIjoiZW52bWFuYWdlcl9hcGkifQ.9AY538qwoyDTwTYbx2Oaagw9Lr5r7BjVzYNzSob8Fcs",
   "accepted" : true
 }
 ### 10. Atualiza nome e descrição do projeto
@@ -95,4 +94,12 @@ Authorization: Bearer {{accessToken}}
   "project_id": "6991dcbb00700a42c6e55af2",
   "project_name" : "nome modificado",
   "project_description" :"descricao modificada"
+}
+### 10. Atualiza nome e descrição do projeto
+PUT {{envmanager_HostAddress}}/project/admin
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+{
+  "user_id": "698dfcfe6b317e449311e392",
+  "project_id" : "6991dcbb00700a42c6e55af2"
 }

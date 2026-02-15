@@ -3,10 +3,10 @@ using envmanager.src.services.interfaces.project;
 
 namespace envmanager.src.services.usecases.project
 {
-    public class UpdateProjectName : IUpdateProjectName
+    public class UpdateProjectNameUseCase : IUpdateProjectNameUseCase
     {
         private readonly IProjectRepository _projectRepository;
-        public UpdateProjectName(IProjectRepository projectRepository)
+        public UpdateProjectNameUseCase(IProjectRepository projectRepository)
         {
             _projectRepository = projectRepository;
         }

@@ -58,7 +58,10 @@ namespace envmanager.src.data.service.dtos
             public string project_name { get; set; } = string.Empty;
             public string project_description { get; set; } = string.Empty;
         }
-
-        /* Criar endpoint que torna um usuario admin (passa o id do usuario que estara na lista de participantes)*/
+        public record TurnIntoAdminRequest
+        {
+            public string user_id { get; set; } = string.Empty;
+            public string project_id { get; set; } = string.Empty;
+        }
     }
 }

@@ -4,6 +4,6 @@ namespace envmanager.src.services.usecases.invitation
 {
     public interface ICreateInviteUseCase
     {
-        public Task<CreateInviteResponse> Execute(CreateInviteRequest request);
+        public Task<CreateInviteResponse> Execute(CreateInviteRequest request, string invitatorId);
     }
 }

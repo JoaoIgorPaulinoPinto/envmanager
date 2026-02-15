@@ -114,9 +114,9 @@ namespace envmanager.src.data.service.repositories
         /// <summary>
         /// Creates a new invitation record and returns the JWT token.
         /// </summary>
-        public async Task<CreateInviteResponse> CreateInvite(CreateInviteRequest request)
+        public async Task<CreateInviteResponse> CreateInvite(CreateInviteRequest request, string invitatorId)
         {
-            var inviter = await _context.Users.Find(u => u.Id == request.inviter_user_id).FirstOrDefaultAsync();
+            var inviter = await _context.Users.Find(u => u.Id == invitatorId).FirstOrDefaultAsync();
             var project = await _context.Projects.Find(p => p.Id == request.project_id).FirstOrDefaultAsync();
             var invited = await _context.Users.Find(u => u.Id == request.invited_user_id).FirstOrDefaultAsync();
 
@@ -137,12 +137,12 @@ namespace envmanager.src.data.service.repositories
                 throw new BusinessException("Only project administrators can send invitations.");
             }
 
-            string jwt = _tokenFactory.CreateInviteToken(request.inviter_user_id, request.invited_user_id, request.project_id);
+            string jwt = _tokenFactory.CreateInviteToken(invitatorId, request.invited_user_id, request.project_id);
 
             var invite = new Invite
             {
                 InvitedUserId = request.invited_user_id,
-                InviterUserId = request.inviter_user_id,
+                InviterUserId = invitatorId,
                 ProjectId = request.project_id,
                 CreatedAt = DateTime.UtcNow
             };

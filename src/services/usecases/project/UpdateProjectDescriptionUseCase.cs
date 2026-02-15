@@ -4,10 +4,10 @@ using System.Xml.Linq;
 
 namespace envmanager.src.services.usecases.project
 {
-    public class UpdateProjectDescription : IUpdateProjectDescription
+    public class UpdateProjectDescriptionUseCase : IUpdateProjectDescriptionUseCase
     {
         private readonly IProjectRepository _projectRepository;
-        public UpdateProjectDescription(IProjectRepository projectRepository)
+        public UpdateProjectDescriptionUseCase(IProjectRepository projectRepository)
         {
             _projectRepository = projectRepository;
         }

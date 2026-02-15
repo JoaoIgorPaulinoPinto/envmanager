@@ -2,7 +2,7 @@
 
 namespace envmanager.src.services.usecases.invitation
 {
-    public interface IResponseInvitation
+    public interface IResponseInvitationUseCase
     {
         public Task<ResponseInviteResponse> Execute(ResponseInviteRequest response, string clientId);
     }

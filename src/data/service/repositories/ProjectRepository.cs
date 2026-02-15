@@ -2,6 +2,7 @@
 using envmanager.src.data.service.interfaces;
 using envmanager.src.data.service.schemes;
 using envmanager.src.data.utils;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Xml.Linq;
 using static envmanager.src.data.service.dtos.KeyDTos;
@@ -13,13 +14,13 @@ namespace envmanager.src.data.service.repositories
 {
     public class ProjectRepository : IProjectRepository
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly AppDbContext _context;
         private readonly SecurityService _secService;
 
         public ProjectRepository(AppDbContext db, SecurityService securityService)
         {
             _secService = securityService;
-            _appDbContext = db;
+            _context = db;
         }
 
         public async Task<bool> CreateProject(CreateProjectRequest createProjectRequest, string userId)
@@ -32,7 +33,7 @@ namespace envmanager.src.data.service.repositories
                 UserId = userId,
                 Members = [new ProjectMember { Id = userId , isAdmin = true}],
             };
-            await _appDbContext.Projects.InsertOneAsync(project);
+            await _context.Projects.InsertOneAsync(project);
             return true;
         }
 
@@ -43,7 +44,7 @@ namespace envmanager.src.data.service.repositories
                  Builders<Project>.Filter.ElemMatch(p => p.Members, m => m.Id == userId)
              );
 
-            var projects = await _appDbContext.Projects.Find(filter).ToListAsync();
+            var projects = await _context.Projects.Find(filter).ToListAsync();
             if (projects == null || !projects.Any())
             {
                 throw new KeyNotFoundException("No projects found in the database.");
@@ -72,7 +73,7 @@ namespace envmanager.src.data.service.repositories
                 )
             );
 
-            var project = await _appDbContext.Projects.Find(filter).FirstOrDefaultAsync();
+            var project = await _context.Projects.Find(filter).FirstOrDefaultAsync();
 
             if (project == null)
             {
@@ -108,13 +109,13 @@ namespace envmanager.src.data.service.repositories
 
         async Task<string> GetUserById(string uId)
         {
-            var user = await _appDbContext.Users.Find(u => u.Id == uId).FirstOrDefaultAsync();
-            return user?.UserName ?? "Usuário Desconhecido";
+            var user = await _context.Users.Find(u => u.Id == uId).FirstOrDefaultAsync();
+            return user?.UserName ?? "Unknown User";
         }
 
         public async Task<bool> UpdateVariables(UpdateVariablesRequest updateVariablesRequest, string userId)
         {
-            var project = await _appDbContext.Projects
+            var project = await _context.Projects
                 .Find(p => p.UserId == userId && p.Id == updateVariablesRequest.project_id)
                 .FirstOrDefaultAsync();
 
@@ -144,7 +145,7 @@ namespace envmanager.src.data.service.repositories
             var filter = Builders<Project>.Filter.Eq(p => p.Id, project.Id);
             var update = Builders<Project>.Update.Set(p => p.Variables, project.Variables);
 
-            var result = await _appDbContext.Projects.UpdateOneAsync(filter, update);
+            var result = await _context.Projects.UpdateOneAsync(filter, update);
 
             return result.ModifiedCount > 0;
         }
@@ -164,7 +165,7 @@ namespace envmanager.src.data.service.repositories
             var filter = Builders<Project>.Filter.Eq(p => p.Id, projId);
             var update = Builders<Project>.Update.Set(p => p.ProjectName, name);
 
-            var result = await _appDbContext.Projects.UpdateOneAsync(filter, update);
+            var result = await _context.Projects.UpdateOneAsync(filter, update);
 
             if (result.MatchedCount == 0)
             {
@@ -190,7 +191,7 @@ namespace envmanager.src.data.service.repositories
                 var filter = Builders<Project>.Filter.Eq(p => p.Id, projId);
                 var update = Builders<Project>.Update.Set(p => p.Description, description);
 
-                var result = await _appDbContext.Projects.UpdateOneAsync(filter, update);
+                var result = await _context.Projects.UpdateOneAsync(filter, update);
 
                 if (result.MatchedCount == 0)
                 {
@@ -199,6 +200,49 @@ namespace envmanager.src.data.service.repositories
 
                 return result.ModifiedCount > 0;
             }
+        }
+
+        public async Task<bool> TurnIntoAdmin(TurnIntoAdminRequest request, string adminId)
+        {
+            var project = await _context.Projects.Find(p => p.Id == request.project_id).FirstOrDefaultAsync();
+
+            if (project == null)
+            {
+                throw new BusinessException("Project not found.");
+            }
+
+            var caller = project.Members?.Find(m => m.Id == adminId);
+            var target = project.Members?.Find(m => m.Id == request.user_id);
+
+            if (caller == null || (!caller.isAdmin && project.UserId != adminId))
+            {
+                throw new BusinessException("Only project administrators can promote other members.");
+            }
+
+            if (target == null)
+            {
+                throw new BusinessException("The user to be promoted is not a member of this project.");
+            }
+
+            if (target.isAdmin)
+            {
+                throw new BusinessException("The user is already an administrator.");
+            }
+
+            var filter = Builders<Project>.Filter.Eq(p => p.Id, request.project_id);
+            var update = Builders<Project>.Update.Set("Members.$[m].isAdmin", true);
+
+            var options = new UpdateOptions
+            {
+                ArrayFilters = new[]
+                {
+            new BsonDocumentArrayFilterDefinition<Project>(new BsonDocument("m.Id", request.user_id))
+        }
+            };
+
+            var result = await _context.Projects.UpdateOneAsync(filter, update, options);
+
+            return result.ModifiedCount > 0;
         }
     }
 }

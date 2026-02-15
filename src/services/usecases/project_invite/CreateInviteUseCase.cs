@@ -12,9 +12,9 @@ namespace envmanager.src.services.usecases.invitation
         {
             _inviteRepository = inviteRepository;
         }
-        public Task<CreateInviteResponse> Execute(CreateInviteRequest request)
+        public Task<CreateInviteResponse> Execute(CreateInviteRequest request, string invitatorId)
         {
-            return _inviteRepository.CreateInvite(request);
+            return _inviteRepository.CreateInvite(request, invitatorId);
         }
 
     }

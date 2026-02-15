@@ -65,11 +65,12 @@ builder.Services.AddScoped<IValidateRefreshToken, ValidateRefreshToken>(); // va
 builder.Services.AddScoped<IAuthLoginUseCase, AuthLoginUseCase>(); // athentication 
 builder.Services.AddScoped<IGetProjectsUseCase, GetProjectsUseCase>(); // get projects
 builder.Services.AddScoped<ICreateProjectUseCase, CreateProjectUseCase>(); // create projects
-builder.Services.AddScoped<IUpdateProjectVariables, UpdateProjectVariables>(); // update project variables 
+builder.Services.AddScoped<IUpdateProjectVariablesUseCase, UpdateProjectVariablesUseCase>(); // update project variables 
 builder.Services.AddScoped<ICreateInviteUseCase, CreateInviteUseCase>(); // create invites to projects
-builder.Services.AddScoped<IUpdateProjectDescription, UpdateProjectDescription>(); // update project name
-builder.Services.AddScoped<IUpdateProjectName, UpdateProjectName>(); // update project name
-builder.Services.AddScoped<IResponseInvitation, ResponseInvitation>(); // accept or decline invites to projects
+builder.Services.AddScoped<IUpdateProjectDescriptionUseCase, UpdateProjectDescriptionUseCase>(); // update project name
+builder.Services.AddScoped<IUpdateProjectNameUseCase, UpdateProjectNameUseCase>(); // update project name
+builder.Services.AddScoped<IResponseInvitationUseCase, ResponseInvitationUseCase>(); // accept or decline invites to projects
+builder.Services.AddScoped<ITurnIntoAdminUseCase, TurnIntoAdminUseCase>(); // turn a member into a administrator of the project
 builder.Services.AddSingleton<ITokenFactory, TokenFactory>(); // token factory
 
 var app = builder.Build();

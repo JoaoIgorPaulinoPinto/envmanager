@@ -9,8 +9,6 @@ namespace envmanager.src.data.service.dtos
 
             [Required(ErrorMessage = "Invited user is required")]
             public string invited_user_id { get; set; } = "";
-            [Required(ErrorMessage = "Inviter user is required")]
-            public string inviter_user_id { get; set; } = "";
             [Required(ErrorMessage = "Project is required")]
             public string project_id { get; set; } = "";
         }
