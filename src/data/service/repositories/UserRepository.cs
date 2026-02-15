@@ -11,11 +11,11 @@ namespace envmanager.src.data.service.repositories
     public class UserRepository : IUserRepository
     {
         private readonly AppDbContext _appDbContext;
-        private readonly JWTService _jwtService;
+        private readonly ITokenFactory _jwtService;
         private readonly SecurityService _securityService;
         private readonly UserMapping _mapper; 
 
-        public UserRepository(AppDbContext db, JWTService jwtService, SecurityService securityService)
+        public UserRepository(AppDbContext db, ITokenFactory jwtService, SecurityService securityService)
         {
             _appDbContext = db;
             _jwtService = jwtService;

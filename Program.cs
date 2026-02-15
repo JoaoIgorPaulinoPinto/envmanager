@@ -12,7 +12,7 @@ using envmanager.src.data.infra.db;
 using envmanager.src.services.interfaces.project;
 using envmanager.src.services.usecases.project;
 using Scalar.AspNetCore;
-using envmanager.src.services.interfaces;
+using envmanager.src.services.usecases.invitation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,7 +50,7 @@ builder.Services.AddProblemDetails();
 
 // --- Services & Utils ---
 builder.Services.AddSingleton<AppDbContext>();
-builder.Services.AddSingleton<JWTService>();
+builder.Services.AddSingleton<ITokenFactory>();
 builder.Services.AddSingleton<SecurityService>();
 
 // --- Repositories ---
@@ -66,6 +66,8 @@ builder.Services.AddScoped<IAuthLoginUseCase, AuthLoginUseCase>();
 builder.Services.AddScoped<IGetProjectsUseCase, GetProjectsUseCase>();
 builder.Services.AddScoped<ICreateProjectUseCase, CreateProjectUseCase>();
 builder.Services.AddScoped<IUpdateProjectVariables, UpdateProjectVariables>();
+builder.Services.AddScoped<ICreateInviteUseCase, CreateInviteUseCase>();
+builder.Services.AddScoped<IAcceptProjectInvite, AcceptProjectInvite>();
 
 var app = builder.Build();
 

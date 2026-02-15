@@ -1,6 +1,7 @@
 ﻿using envmanager.src.data.infra.db;
 using envmanager.src.data.service.interfaces;
 using envmanager.src.data.service.schemes;
+using envmanager.src.data.utils;
 using MongoDB.Driver;
 using static envmanager.src.data.service.dtos.KeyDTos;
 using static envmanager.src.data.service.dtos.MemberDtos;
@@ -11,9 +12,11 @@ namespace envmanager.src.data.service.repositories
     public class ProjectRepository : IProjectRepository
     {
         private readonly AppDbContext _appDbContext;
+        private readonly SecurityService _secService;
 
-        public ProjectRepository(AppDbContext db)
+        public ProjectRepository(AppDbContext db, SecurityService securityService)
         {
+            _secService = securityService;
             _appDbContext = db;
         }
 
@@ -23,7 +26,7 @@ namespace envmanager.src.data.service.repositories
             {
                 Description = createProjectRequest.description,
                 ProjectName = createProjectRequest.name,
-                Password = createProjectRequest.password,
+                Password = createProjectRequest.password != "" ? _secService.HashPassword(createProjectRequest.password!) : "",
                 UserId = userId
             };
             await _appDbContext.Projects.InsertOneAsync(project);

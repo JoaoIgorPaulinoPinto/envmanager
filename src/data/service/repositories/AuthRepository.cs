@@ -10,9 +10,9 @@ namespace envmanager.src.data.service.repositories
     public class AuthRepository : IAuthRepository
     {
         private readonly AppDbContext _appDbContext;
-        private readonly JWTService _jwtService;
+        private readonly ITokenFactory _jwtService;
 
-        public AuthRepository(AppDbContext db, JWTService jwtService)
+        public AuthRepository(AppDbContext db, ITokenFactory jwtService)
         {
             _appDbContext = db;
             _jwtService = jwtService;

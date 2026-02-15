@@ -9,7 +9,10 @@ public class GlobalExceptionHandler : IExceptionHandler
     {
         _logger = logger;
     }
-
+    public class BusinessException : Exception
+    {
+        public BusinessException(string message) : base(message) { }
+    }
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
         Exception exception,

@@ -1,8 +1,8 @@
-@envmanager_HostAddress = http://localhost:5115
-@accessToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OGRmY2ZlNmIzMTdlNDQ5MzExZTM5MiIsImVtYWlsIjoiam9hb2lnb3JwYXVsaW5vcGludG81QGVtYWlsLmNvbSIsImp0aSI6IjdjOTFmZjY0LWZlZTMtNDFjZC04MDlmLTcwOTJhODdmMGU2YyIsImV4cCI6MTc3MTAxOTI2NSwiaXNzIjoiZW52bWFuYWdlcl9hcGkiLCJhdWQiOiJlbnZtYW5hZ2VyX2FwaSJ9.YPaLA8KGXIYiuxAq2dGYlaJao-06fPZuvuRDpkouVyE
+ï»¿@envmanager_HostAddress = http://localhost:5115
+@accessToken = {{login.response.body.token}}
 @refreshToken = 74f3526ecb92448bb83e8309cefab432
 
-### 1. Criar usuário (Cadastro)
+### 1. Criar usuario (Cadastro)
 POST {{envmanager_HostAddress}}/user
 Content-Type: application/json
 {
@@ -11,7 +11,8 @@ Content-Type: application/json
   "password": "123456"
 }
 
-### 2. Fazer Login 
+### 2. Fazer Login
+# @name login
 POST {{envmanager_HostAddress}}/auth
 Content-Type: application/json
 {
@@ -19,19 +20,20 @@ Content-Type: application/json
   "password": "123456"
 }
 
-### 3. Renovar Sessão (Corrigido)
+### 3. Renovar Sessao
 POST {{envmanager_HostAddress}}/auth/refresh
 Content-Type: application/json
-{
-  "refreshToken" : {{{refreshToken}}}
-}
+"{{refreshToken}}"
 
-
-### 4. Listar todos os usuários
+### 4. Listar todos os usuarios
 GET {{envmanager_HostAddress}}/user
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
+### 4.1. Pegar usuario por id
+GET {{envmanager_HostAddress}}/user/698dfcfe6b317e449311e392
+Accept: application/json
+Authorization: Bearer {{accessToken}}
 
 ### 5. Criar projeto
 POST {{envmanager_HostAddress}}/project
@@ -40,7 +42,7 @@ Authorization: Bearer {{accessToken}}
 {
   "name": "aprojectwhithmember",
   "description": "Enviroment variables management in a center",
-  "password": "",
+  "password": ""
 }
 
 ### 6. Pegar projetos
@@ -48,7 +50,7 @@ GET {{envmanager_HostAddress}}/project
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
-### 6. Pegar projetos
+### 6.1. Pegar projeto por id
 GET {{envmanager_HostAddress}}/project/698f9784b85029080460dc67
 Accept: application/json
 Authorization: Bearer {{accessToken}}
@@ -59,9 +61,32 @@ Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 {
   "project_id": "698f9512b85029080460dc64",
-  "variables":[
-      {
-      "variable":"DEFAULT_API_KEY",
-      "value": "http://localhost:3000/"}
+  "variables": [
+    {
+      "variable": "DEFAULT_API_KEY",
+      "Value": "http://localhost:3000/"
+    }
   ]
 }
+
+### 8. Criar um convite para projeto
+# @name createInvite
+# Aviso: o backend atual tem conflito de rotas em InvitationController.
+# Ajuste as rotas no backend antes de testar os endpoints de convite.
+POST {{envmanager_HostAddress}}/project
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "invited_user_id": "ID_DO_USUARIO_CONVIDADO",
+  "inviter_user_id": "698dfcfe6b317e449311e392",
+  "project_id": "698f9512b85029080460dc64"
+}
+
+### Armazenar o JWT do convite retornado acima
+@inviteJwt = {{createInvite.response.body.jwt_token}}
+
+### 9. Aceitar convite (via token)
+# Exemplo esperado se a rota existir:
+# GET {{envmanager_HostAddress}}/project/accept/{{inviteJwt}}
+# Authorization: Bearer {{accessToken}}

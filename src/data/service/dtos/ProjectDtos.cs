@@ -52,5 +52,8 @@ namespace envmanager.src.data.service.dtos
             [Required(ErrorMessage = "Some variable is required to update project's variables.")]
             public List<CreateVariableRequest> variables { get; set; } = [];
         }
+
+
+       /* Criar endpoint que torna um usuario admin (passa o id do usuario que estara na lista de participantes)*/
     }
 }

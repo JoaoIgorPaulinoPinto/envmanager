@@ -10,9 +10,9 @@ public class AuthController : ControllerBase
 {
     private readonly IAuthLoginUseCase _authLoginUseCase;
     private readonly IValidateRefreshToken _validateRefreshToken;
-    private readonly JWTService _jwtService;
+    private readonly ITokenFactory _jwtService;
 
-    public AuthController(IValidateRefreshToken validateRefreshToken, IAuthLoginUseCase authLoginUseCase, JWTService jwtService)
+    public AuthController(IValidateRefreshToken validateRefreshToken, IAuthLoginUseCase authLoginUseCase, ITokenFactory jwtService)
     {
         _authLoginUseCase = authLoginUseCase;
         _jwtService = jwtService;

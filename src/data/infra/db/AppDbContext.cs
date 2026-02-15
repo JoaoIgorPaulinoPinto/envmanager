@@ -18,5 +18,6 @@ namespace envmanager.src.data.infra.db
 
             public IMongoCollection<User> Users => _database.GetCollection<User>("user");
             public IMongoCollection<Project> Projects => _database.GetCollection<Project>("project");
+            public IMongoCollection<Invite> Invites => _database.GetCollection<Invite>("invites");
     }
 }

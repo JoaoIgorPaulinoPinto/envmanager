@@ -23,9 +23,6 @@ namespace envmanager.src.data.service.schemes
         [MaxLength(32)]
         [MinLength(6)]
         public string Password { get; set; } = "";
-
-
-
         [BsonElement("refresh_token")]
         public string RefreshToken { get; set; } = "";
         [BsonElement("refresh_token_expiry")]

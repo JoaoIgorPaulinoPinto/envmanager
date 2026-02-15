@@ -1,6 +1,6 @@
-﻿using envmanager.src.data.service.dtos;
+﻿
 using envmanager.src.data.service.interfaces;
-using envmanager.src.services.interfaces;
+using envmanager.src.services.interfaces.project;
 using static envmanager.src.data.service.dtos.ProjectDtos;
 
 namespace envmanager.src.services.usecases.project
