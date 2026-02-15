@@ -1,5 +1,4 @@
-﻿using envmanager.src.services.interfaces;
-using envmanager.src.services.interfaces.project;
+﻿using envmanager.src.services.interfaces.project;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static envmanager.src.data.service.dtos.ProjectDtos;

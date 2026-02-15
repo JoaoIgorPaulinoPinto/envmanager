@@ -50,24 +50,25 @@ builder.Services.AddProblemDetails();
 
 // --- Services & Utils ---
 builder.Services.AddSingleton<AppDbContext>();
-builder.Services.AddSingleton<ITokenFactory>();
 builder.Services.AddSingleton<SecurityService>();
 
 // --- Repositories ---
+builder.Services.AddScoped<IInviteRepository, InviteRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
 // --- Use Cases ---
-builder.Services.AddScoped<IGetUsersUseCase, GetUsersUseCase>();
-builder.Services.AddScoped<ICreateUserUseCase, CreateUserUseCase>();
-builder.Services.AddScoped<IValidateRefreshToken, ValidateRefreshToken>();
-builder.Services.AddScoped<IAuthLoginUseCase, AuthLoginUseCase>();
-builder.Services.AddScoped<IGetProjectsUseCase, GetProjectsUseCase>();
-builder.Services.AddScoped<ICreateProjectUseCase, CreateProjectUseCase>();
-builder.Services.AddScoped<IUpdateProjectVariables, UpdateProjectVariables>();
-builder.Services.AddScoped<ICreateInviteUseCase, CreateInviteUseCase>();
-builder.Services.AddScoped<IAcceptProjectInvite, AcceptProjectInvite>();
+builder.Services.AddScoped<IGetUsersUseCase, GetUsersUseCase>(); // get users
+builder.Services.AddScoped<ICreateUserUseCase, CreateUserUseCase>(); // create users
+builder.Services.AddScoped<IValidateRefreshToken, ValidateRefreshToken>(); // validade refresh token
+builder.Services.AddScoped<IAuthLoginUseCase, AuthLoginUseCase>(); // athentication 
+builder.Services.AddScoped<IGetProjectsUseCase, GetProjectsUseCase>(); // get projects
+builder.Services.AddScoped<ICreateProjectUseCase, CreateProjectUseCase>(); // create projects
+builder.Services.AddScoped<IUpdateProjectVariables, UpdateProjectVariables>(); // update project variables 
+builder.Services.AddScoped<ICreateInviteUseCase, CreateInviteUseCase>(); // create invites to projects
+builder.Services.AddScoped<IAcceptProjectInvite, AcceptProjectInvite>(); // accept invites to projects
+builder.Services.AddSingleton<ITokenFactory, TokenFactory>(); // token factory
 
 var app = builder.Build();
 

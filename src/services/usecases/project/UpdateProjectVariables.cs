@@ -17,4 +17,4 @@ namespace envmanager.src.services.usecases.project
             return await _projectRepository.UpdateVariables(updateVariablesRequest, userId);
         }
     }
-}
+}       

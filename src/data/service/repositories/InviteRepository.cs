@@ -75,10 +75,14 @@ namespace envmanager.src.data.service.repositories
 
             var membership = project.Members?.Find(m => m.Id == inviter.Id);
 
-            if (membership == null || !membership.isAdmin)
+            if(inviter.Id != project.UserId)
             {
-                throw new BusinessException("Apenas administradores do projeto podem enviar convites.");
+                if (membership == null || !membership.isAdmin)
+                {
+                    throw new BusinessException("Apenas administradores do projeto podem enviar convites.");
+                }
             }
+         
 
             string jwt = _tokenFactory.CreateInviteToken(request.inviter_user_id, request.invited_user_id, request.project_id);
 
