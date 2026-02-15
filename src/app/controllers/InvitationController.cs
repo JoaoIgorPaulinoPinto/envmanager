@@ -18,7 +18,8 @@ namespace envmanager.src.app.controllers
             _acceptProjectInvite = acceptProjectInvite;
             _createInvitationUseCase = createInvitationUseCase;
         }
-
+        private string userId => User.Claims.FirstOrDefault(c => c.Type == "id")?.Value
+                   ?? throw new UnauthorizedAccessException("Usuário inválido no token.");
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateInvite([FromBody] CreateInviteRequest request)
@@ -33,10 +34,11 @@ namespace envmanager.src.app.controllers
         }
 
         [Authorize]
-        [HttpPost("answer")] 
+        [HttpPost("answer")]
         public async Task<IActionResult> AcceptInvite([FromBody] ResponseInviteRequest response)
         {
-            var result = await _acceptProjectInvite.Execute(response);
+            string client_id = userId;
+            var result = await _acceptProjectInvite.Execute(response, userId);
             return Ok(new
             {
                 Message = result.message,

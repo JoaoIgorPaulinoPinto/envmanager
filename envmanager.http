@@ -51,16 +51,16 @@ Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### 6.1. Pegar projeto por id
-GET {{envmanager_HostAddress}}/project/69912d4ae57c8720c9a76774
+GET {{envmanager_HostAddress}}/project/6991dcbb00700a42c6e55af2
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### 7. Atualiza variaveis do projeto
-PUT {{envmanager_HostAddress}}/project
+PUT {{envmanager_HostAddress}}/project/variables
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 {
-  "project_id": "698e8eb1a117978b41305332",
+  "project_id": "6991dcbb00700a42c6e55af2",
   "variables": [
     {
       "variable": "DEFAULT_API_KEY",
@@ -73,11 +73,10 @@ Authorization: Bearer {{accessToken}}
 POST {{envmanager_HostAddress}}/invite
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
-
 {
   "invited_user_id": "698f295bab4bc4b74f30fca4",
-  "inviter_user_id": "698dfcfe6b317e449311e392",
-  "project_id": "69912d4ae57c8720c9a76774"
+  "inviter_user_id": "69912b4ae57c8720c9a76773",
+  "project_id": "6991dcbb00700a42c6e55af2"
 }
 
 ### 9. Aceitar convite (via token)
@@ -85,8 +84,8 @@ POST {{envmanager_HostAddress}}/invite/answer
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 {
-  "token" :"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbnZpdGVySWQiOiI2OThkZmNmZTZiMzE3ZTQ0OTMxMWUzOTIiLCJpbnZpdGVkSWQiOiI2OThmMjk1YmFiNGJjNGI3NGYzMGZjYTQiLCJwcm9qZWN0SWQiOiI2OTkxMmQ0YWU1N2M4NzIwYzlhNzY3NzQiLCJqdGkiOiJkZjU0MTM5Yi01M2Y4LTRlODItODFkZC05MGIxZjgyOTM0YWEiLCJleHAiOjE3NzEyNTAzNDcsImlzcyI6ImVudm1hbmFnZXJfYXBpIiwiYXVkIjoiZW52bWFuYWdlcl9hcGkifQ.HS14ZOgNy6WpGRrprLCr1mWmB1phpuol1Hd3CMB_xkc",
-  "accepted" : false
+  "token" :"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbnZpdGVySWQiOiI2OTkxMmI0YWU1N2M4NzIwYzlhNzY3NzMiLCJpbnZpdGVkSWQiOiI2OThmMjk1YmFiNGJjNGI3NGYzMGZjYTQiLCJwcm9qZWN0SWQiOiI2OTkxZGNiYjAwNzAwYTQyYzZlNTVhZjIiLCJqdGkiOiI1Mzg0N2YyOS0yM2I5LTQ3N2UtYjA0MC05NjJkOWFiYTgyZWMiLCJleHAiOjE3NzEyNTM2MDUsImlzcyI6ImVudm1hbmFnZXJfYXBpIiwiYXVkIjoiZW52bWFuYWdlcl9hcGkifQ.TvRraSerEb0j9sFgCFXdvimnUGqHNEei_r8FBnQJXAo",
+  "accepted" : true
 }
 ### 10. Atualiza nome e descrição do projeto
 PUT {{envmanager_HostAddress}}/project/update

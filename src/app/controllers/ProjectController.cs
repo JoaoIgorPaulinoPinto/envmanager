@@ -33,7 +33,6 @@ namespace envmanager.src.app.controllers
         private string userId => User.Claims.FirstOrDefault(c => c.Type == "id")?.Value
                            ?? throw new UnauthorizedAccessException("Usuário inválido no token.");
 
-        [HttpPost]
         [Authorize]
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] CreateProjectRequest createProjectRequest)

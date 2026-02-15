@@ -29,7 +29,8 @@ namespace envmanager.src.data.service.repositories
                 Description = createProjectRequest.description,
                 ProjectName = createProjectRequest.name,
                 Password = createProjectRequest.password != "" ? _secService.HashPassword(createProjectRequest.password!) : "",
-                UserId = userId
+                UserId = userId,
+                Members = [new ProjectMember { Id = userId , isAdmin = true}],
             };
             await _appDbContext.Projects.InsertOneAsync(project);
             return true;
