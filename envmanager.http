@@ -1,5 +1,5 @@
 ﻿@envmanager_HostAddress = http://localhost:5115
-@accessToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTEyYjRhZTU3Yzg3MjBjOWE3Njc3MyIsImVtYWlsIjoiam9hb2lnb3JwYXVsaW5vcGludG8yMDA2QGVtYWlsLmNvbSIsImp0aSI6IjdhNzdjNjcwLWI2N2YtNGZhNC1iMmE4LWE5MTYxY2ZlMzhmOSIsImV4cCI6MTc3MTE2NDgxMSwiaXNzIjoiZW52bWFuYWdlcl9hcGkiLCJhdWQiOiJlbnZtYW5hZ2VyX2FwaSJ9.j_sB9L_igv_jklYeIggxFdqz7uEfqphjohTuw4OcESQ
+@accessToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTEyYjRhZTU3Yzg3MjBjOWE3Njc3MyIsImVtYWlsIjoiam9hb2lnb3JwYXVsaW5vcGludG8yMDA2QGVtYWlsLmNvbSIsImp0aSI6IjBmMzhmNGRjLTM1ZWYtNGM5OS1hOGZhLTgzOTFmOTExNzRhOSIsImV4cCI6MTc3MTE2NzY5MCwiaXNzIjoiZW52bWFuYWdlcl9hcGkiLCJhdWQiOiJlbnZtYW5hZ2VyX2FwaSJ9.B5bC9373pHIubzDxXXUvD2icCoxG9ScB74DYuwiTWPg
 @refreshToken = 2f99873eb9fc442bab28d1d078e2383c
 
 ### 1. Criar usuario (Cadastro)
@@ -31,7 +31,7 @@ Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### 4.1. Pegar usuario por id
-GET {{envmanager_HostAddress}}/user/698dfcfe6b317e449311e392
+GET {{envmanager_HostAddress}}/user/69912b4ae57c8720c9a76773
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -40,7 +40,7 @@ POST {{envmanager_HostAddress}}/project
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 {
-  "name": "aprojectwhithmemberinvited",
+  "name": "project test",
   "description": "Enviroment variables management in a center",
   "password": ""
 }
@@ -87,4 +87,13 @@ Authorization: Bearer {{accessToken}}
 {
   "token" :"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbnZpdGVySWQiOiI2OThkZmNmZTZiMzE3ZTQ0OTMxMWUzOTIiLCJpbnZpdGVkSWQiOiI2OThmMjk1YmFiNGJjNGI3NGYzMGZjYTQiLCJwcm9qZWN0SWQiOiI2OTkxMmQ0YWU1N2M4NzIwYzlhNzY3NzQiLCJqdGkiOiJkZjU0MTM5Yi01M2Y4LTRlODItODFkZC05MGIxZjgyOTM0YWEiLCJleHAiOjE3NzEyNTAzNDcsImlzcyI6ImVudm1hbmFnZXJfYXBpIiwiYXVkIjoiZW52bWFuYWdlcl9hcGkifQ.HS14ZOgNy6WpGRrprLCr1mWmB1phpuol1Hd3CMB_xkc",
   "accepted" : false
+}
+### 10. Atualiza nome e descrição do projeto
+PUT {{envmanager_HostAddress}}/project/update
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+{
+  "project_id": "6991dcbb00700a42c6e55af2",
+  "project_name" : "nome modificado",
+  "project_description" :"descricao modificada"
 }

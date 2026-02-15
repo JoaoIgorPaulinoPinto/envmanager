@@ -4,11 +4,11 @@ using static envmanager.src.data.service.dtos.InviteDtos;
 
 namespace envmanager.src.services.usecases.invitation
 {
-    public class AcceptProjectInvite : IResponseInvitation
+    public class ResponseInvitation : IResponseInvitation
     {
         private readonly IInviteRepository _inviteRepository;
 
-        public AcceptProjectInvite (IInviteRepository inviteRepository)
+        public ResponseInvitation (IInviteRepository inviteRepository)
         {
             _inviteRepository = inviteRepository;
         }

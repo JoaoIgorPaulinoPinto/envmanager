@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using static envmanager.src.data.service.dtos.ProjectDtos;
+﻿using static envmanager.src.data.service.dtos.ProjectDtos;
 
 namespace envmanager.src.data.service.interfaces
 {
@@ -9,5 +8,8 @@ namespace envmanager.src.data.service.interfaces
         public Task<List<GetProjectsResponse>> GetProjects(string userId);
         public Task<GetProjectByIdResponse> GetProjectById(string userId, string projId);
         public Task<bool> UpdateVariables(UpdateVariablesRequest updateVariablesRequest, string projId);
+        public Task<bool> UpdateName(string name, string projId);
+        public Task<bool> UpdateDescription(string description, string projId);
+
     }
 }

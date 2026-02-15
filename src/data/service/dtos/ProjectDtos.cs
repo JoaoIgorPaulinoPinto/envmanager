@@ -46,14 +46,19 @@ namespace envmanager.src.data.service.dtos
 
         public record UpdateVariablesRequest
         {
-   
+
             [Required(ErrorMessage = "Project id is required.")]
             public string project_id { get; set; } = string.Empty;
             [Required(ErrorMessage = "Some variable is required to update project's variables.")]
             public List<CreateVariableRequest> variables { get; set; } = [];
         }
+        public record UpdateNameAndDescriptionRequest
+        {
+            public string project_id { get; set; } = string.Empty;
+            public string project_name { get; set; } = string.Empty;
+            public string project_description { get; set; } = string.Empty;
+        }
 
-
-       /* Criar endpoint que torna um usuario admin (passa o id do usuario que estara na lista de participantes)*/
+        /* Criar endpoint que torna um usuario admin (passa o id do usuario que estara na lista de participantes)*/
     }
 }

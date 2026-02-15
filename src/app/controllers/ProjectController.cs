@@ -12,12 +12,22 @@ namespace envmanager.src.app.controllers
         private readonly ICreateProjectUseCase _createProjectUseCase;
         private readonly IGetProjectsUseCase _getProjectsUseCase;
         private readonly IUpdateProjectVariables _updateProjectVariables;
+        private readonly IUpdateProjectName _updateProjectName;
+        private readonly IUpdateProjectDescription _updateProjectDescription;
 
-        public ProjectController(IUpdateProjectVariables updateProjectVariables, IGetProjectsUseCase getProjectsUseCase, ICreateProjectUseCase createProjectUseCase)
+        public ProjectController(
+                IUpdateProjectVariables updateProjectVariables,
+                IGetProjectsUseCase getProjectsUseCase,
+                ICreateProjectUseCase createProjectUseCase,
+                IUpdateProjectName updateProjectName,
+                IUpdateProjectDescription updateProjectDescription
+                )
         {
+            _updateProjectVariables = updateProjectVariables;
+            _updateProjectName = updateProjectName;
             _createProjectUseCase = createProjectUseCase;
             _getProjectsUseCase = getProjectsUseCase;
-            _updateProjectVariables = updateProjectVariables;
+            _updateProjectDescription = updateProjectDescription;
         }
 
         private string userId => User.Claims.FirstOrDefault(c => c.Type == "id")?.Value
@@ -39,16 +49,31 @@ namespace envmanager.src.app.controllers
         }
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<GetProjectByIdResponse> Get([FromRoute]string id)
+        public async Task<GetProjectByIdResponse> Get([FromRoute] string id)
         {
             return await _getProjectsUseCase.Execute(userId, id);
         }
         [Authorize]
-        [HttpPut]
+        [HttpPut("variables")]
         public async Task<ActionResult> UpdateVariables([FromBody] UpdateVariablesRequest updateVariablesRequest)
         {
             var updated = await _updateProjectVariables.Execute(updateVariablesRequest, userId);
-            return Ok(new { message = "Project successfully created" });           
+            return Ok(new { message = "Project successfully created" });
+        }
+        [Authorize]
+        [HttpPut("update")]
+        public async Task<ActionResult> UpdateProjectNameAndDescription([FromBody] UpdateNameAndDescriptionRequest updateVariablesRequest)
+        {
+            bool name = await _updateProjectName.Execute(updateVariablesRequest.project_name, updateVariablesRequest.project_id);
+            bool desc = await _updateProjectDescription.Execute(updateVariablesRequest.project_description, updateVariablesRequest.project_id);
+            if (name || desc)
+            {
+                return Ok(new { message = "Project successfully updated" });
+            }
+            else
+            {
+                return Ok(new { message = "Nothing updated" });
+            }
         }
     }
 }

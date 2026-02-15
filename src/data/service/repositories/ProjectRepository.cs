@@ -3,9 +3,11 @@ using envmanager.src.data.service.interfaces;
 using envmanager.src.data.service.schemes;
 using envmanager.src.data.utils;
 using MongoDB.Driver;
+using System.Xml.Linq;
 using static envmanager.src.data.service.dtos.KeyDTos;
 using static envmanager.src.data.service.dtos.MemberDtos;
 using static envmanager.src.data.service.dtos.ProjectDtos;
+using static GlobalExceptionHandler;
 
 namespace envmanager.src.data.service.repositories
 {
@@ -144,6 +146,58 @@ namespace envmanager.src.data.service.repositories
             var result = await _appDbContext.Projects.UpdateOneAsync(filter, update);
 
             return result.ModifiedCount > 0;
+        }
+
+        public async Task<bool> UpdateName(string name, string projId)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Project name must be provided and cannot be empty.");
+            }
+
+            if (string.IsNullOrEmpty(projId))
+            {
+                throw new ArgumentException("Project ID must be provided.");
+            }
+
+            var filter = Builders<Project>.Filter.Eq(p => p.Id, projId);
+            var update = Builders<Project>.Update.Set(p => p.ProjectName, name);
+
+            var result = await _appDbContext.Projects.UpdateOneAsync(filter, update);
+
+            if (result.MatchedCount == 0)
+            {
+                throw new BusinessException("Project not found.");
+            }
+
+            return result.ModifiedCount > 0;
+        }
+
+        public async Task<bool> UpdateDescription(string description, string projId)
+        {
+            {
+                if (string.IsNullOrWhiteSpace(description))
+                {
+                    throw new ArgumentException("Project name must be provided and cannot be empty.");
+                }
+
+                if (string.IsNullOrEmpty(projId))
+                {
+                    throw new ArgumentException("Project ID must be provided.");
+                }
+
+                var filter = Builders<Project>.Filter.Eq(p => p.Id, projId);
+                var update = Builders<Project>.Update.Set(p => p.Description, description);
+
+                var result = await _appDbContext.Projects.UpdateOneAsync(filter, update);
+
+                if (result.MatchedCount == 0)
+                {
+                    throw new BusinessException("Project not found.");
+                }
+
+                return result.ModifiedCount > 0;
+            }
         }
     }
 }

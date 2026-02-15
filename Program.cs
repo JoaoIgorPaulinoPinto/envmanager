@@ -67,7 +67,9 @@ builder.Services.AddScoped<IGetProjectsUseCase, GetProjectsUseCase>(); // get pr
 builder.Services.AddScoped<ICreateProjectUseCase, CreateProjectUseCase>(); // create projects
 builder.Services.AddScoped<IUpdateProjectVariables, UpdateProjectVariables>(); // update project variables 
 builder.Services.AddScoped<ICreateInviteUseCase, CreateInviteUseCase>(); // create invites to projects
-builder.Services.AddScoped<IResponseInvitation, AcceptProjectInvite>(); // accept invites to projects
+builder.Services.AddScoped<IUpdateProjectDescription, UpdateProjectDescription>(); // update project name
+builder.Services.AddScoped<IUpdateProjectName, UpdateProjectName>(); // update project name
+builder.Services.AddScoped<IResponseInvitation, ResponseInvitation>(); // accept or decline invites to projects
 builder.Services.AddSingleton<ITokenFactory, TokenFactory>(); // token factory
 
 var app = builder.Build();
