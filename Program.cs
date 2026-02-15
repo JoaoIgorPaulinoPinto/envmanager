@@ -36,7 +36,7 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = jwtIssuer,
         ValidAudience = jwtIssuer,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
-        ClockSkew = TimeSpan.Zero 
+        ClockSkew = TimeSpan.Zero
     };
 });
 
@@ -44,7 +44,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
-// --- Registro do Exception Handler (Novo!) ---
+// --- Registro do Exception Handler ---
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
@@ -67,7 +67,7 @@ builder.Services.AddScoped<IGetProjectsUseCase, GetProjectsUseCase>(); // get pr
 builder.Services.AddScoped<ICreateProjectUseCase, CreateProjectUseCase>(); // create projects
 builder.Services.AddScoped<IUpdateProjectVariables, UpdateProjectVariables>(); // update project variables 
 builder.Services.AddScoped<ICreateInviteUseCase, CreateInviteUseCase>(); // create invites to projects
-builder.Services.AddScoped<IAcceptProjectInvite, AcceptProjectInvite>(); // accept invites to projects
+builder.Services.AddScoped<IResponseInvitation, AcceptProjectInvite>(); // accept invites to projects
 builder.Services.AddSingleton<ITokenFactory, TokenFactory>(); // token factory
 
 var app = builder.Build();
@@ -76,14 +76,16 @@ app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();app.MapScalarApiReference();
+    app.MapOpenApi(); app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();  
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.Map("/", () => "Server Active!");
 
 app.Run();

@@ -4,7 +4,7 @@ using static envmanager.src.data.service.dtos.InviteDtos;
 
 namespace envmanager.src.services.usecases.invitation
 {
-    public class AcceptProjectInvite : IAcceptProjectInvite
+    public class AcceptProjectInvite : IResponseInvitation
     {
         private readonly IInviteRepository _inviteRepository;
 
@@ -12,9 +12,9 @@ namespace envmanager.src.services.usecases.invitation
         {
             _inviteRepository = inviteRepository;
         }
-        public Task<CreateInviteResponse> Execute(string token)
+        public Task<ResponseInviteResponse> Execute(ResponseInviteRequest response)
         {
-            return _inviteRepository.AcceptInvite(token);
+            return _inviteRepository.AnswerInvite(response);
         }
 
     }

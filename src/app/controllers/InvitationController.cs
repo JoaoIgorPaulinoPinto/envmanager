@@ -11,9 +11,9 @@ namespace envmanager.src.app.controllers
     public class InvitationController : ControllerBase
     {
         private readonly ICreateInviteUseCase _createInvitationUseCase;
-        private readonly IAcceptProjectInvite _acceptProjectInvite;
+        private readonly IResponseInvitation _acceptProjectInvite;
 
-        public InvitationController(ICreateInviteUseCase createInvitationUseCase, IAcceptProjectInvite acceptProjectInvite)
+        public InvitationController(ICreateInviteUseCase createInvitationUseCase, IResponseInvitation acceptProjectInvite)
         {
             _acceptProjectInvite = acceptProjectInvite;
             _createInvitationUseCase = createInvitationUseCase;
@@ -33,15 +33,14 @@ namespace envmanager.src.app.controllers
         }
 
         [Authorize]
-        [HttpGet("accept/{token}")] // Adicionado o parâmetro de rota
-        public async Task<IActionResult> AcceptInvite([FromRoute] string token)
+        [HttpPost("answer")] 
+        public async Task<IActionResult> AcceptInvite([FromBody] ResponseInviteRequest response)
         {
-            var result = await _acceptProjectInvite.Execute(token);
-
+            var result = await _acceptProjectInvite.Execute(response);
             return Ok(new
             {
-                Message = "Invite accepted successfully",
-                Data = result
+                Message = result.message,
+                Data = result.accepted
             });
         }
     }

@@ -82,7 +82,7 @@ namespace envmanager.src.data.service.repositories
                 memberResponses.Add(new GetMemberResponse
                 {
                     Name = await GetUserById(m.Id),
-                    isAdmin = m.Id == project.UserId 
+                    isAdmin = m.Id == project.UserId
                 });
             }
 

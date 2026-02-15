@@ -2,8 +2,8 @@
 
 namespace envmanager.src.services.usecases.invitation
 {
-    public interface IAcceptProjectInvite
+    public interface IResponseInvitation
     {
-        public Task<CreateInviteResponse> Execute(string request);
+        public Task<ResponseInviteResponse> Execute(ResponseInviteRequest response);
     }
 }
