@@ -176,7 +176,16 @@ namespace envmanager.src.data.service.repositories
                 .Find(p => p.UserId == userId && p.Id == updateVariablesRequest.project_id)
                 .FirstOrDefaultAsync();
 
+
+            
             if (project == null) throw new KeyNotFoundException("Project not found.");
+            ProjectMember? member = project.Members.Find(u => u.Id == userId);
+            if (member == null) throw new Exception("Only admin members can change this");
+            bool isAdmin = member.isAdmin;
+            if (!isAdmin)
+            {
+                if (member == null) throw new Exception("Only admin members can change this");
+            }
             project.Variables ??= new List<Key>();
 
             foreach (var incomingVar in updateVariablesRequest.variables)
