@@ -1,9 +1,12 @@
-﻿using static envmanager.src.data.service.dtos.InviteDtos;
+using envmanager.src.data.service.schemes;
+
 namespace envmanager.src.data.service.interfaces
 {
     public interface IInviteRepository
     {
-        public Task<CreateInviteResponse> CreateInvite(CreateInviteRequest request, string invitatorId);
-        public Task<ResponseInviteResponse> AnswerInvite(ResponseInviteRequest request, string client);
+        Task<Invite> CreateInvite(Invite invite);
+        Task<Invite?> GetByProjectAndInvited(string projectId, string invitedUserId);
+        Task<bool> DeleteById(string inviteId);
+        Task<bool> DeleteByProjectAndInvited(string projectId, string invitedUserId);
     }
 }

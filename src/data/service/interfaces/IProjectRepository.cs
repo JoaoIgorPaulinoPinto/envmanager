@@ -1,17 +1,16 @@
-﻿using static envmanager.src.data.service.dtos.ProjectDtos;
+using envmanager.src.data.service.schemes;
 
 namespace envmanager.src.data.service.interfaces
 {
     public interface IProjectRepository
     {
-        public Task<bool> CreateProject(CreateProjectRequest createProjectRequest, string userId);
-        public Task<List<GetProjectsResponse>> GetProjects(string userId);
-        public Task<GetProjectByIdResponse> GetProjectById(string userId, string projId);
-        public Task<GetProjectByIdResponse> GetProjectById(string userId, string projId, string password);
-        public Task<bool> UpdateVariables(UpdateVariablesRequest updateVariablesRequest, string projId);
-        public Task<bool> UpdateName(string name, string projId);
-        public Task<bool> UpdateDescription(string description, string projId);
-        public Task<bool> TurnIntoAdmin(TurnIntoAdminRequest request, string adminId);
-
+        Task<bool> CreateProject(Project project);
+        Task<List<Project>> GetProjectsByUser(string userId);
+        Task<Project?> GetProjectById(string projectId);
+        Task<bool> UpdateVariables(string projectId, List<Key> variables);
+        Task<bool> UpdateName(string name, string projectId);
+        Task<bool> UpdateDescription(string description, string projectId);
+        Task<bool> SetMemberAdmin(string projectId, string userId, bool isAdmin);
+        Task<bool> AddMember(string projectId, ProjectMember member);
     }
 }

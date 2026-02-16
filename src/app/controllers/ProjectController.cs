@@ -1,4 +1,4 @@
-﻿using envmanager.src.services.interfaces.project;
+using envmanager.src.services.interfaces.project;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static envmanager.src.data.service.dtos.ProjectDtos;
@@ -40,15 +40,17 @@ namespace envmanager.src.app.controllers
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] CreateProjectRequest createProjectRequest)
         {
-            var created = await _createProjectUseCase.Execute(createProjectRequest, userId);
+            await _createProjectUseCase.Execute(createProjectRequest, userId);
             return Created("", new { message = "Project successfully created" });
         }
+
         [Authorize]
         [HttpGet]
         public async Task<List<GetProjectsResponse>> Get()
         {
             return await _getProjectsUseCase.Execute(userId);
         }
+
         [Authorize]
         [HttpPost("{id}/details")]
         public async Task<GetProjectByIdResponse> Get([FromRoute] string id, [FromBody] GetProjectDetailsRequest? req)
@@ -57,33 +59,33 @@ namespace envmanager.src.app.controllers
             {
                 return await _getProjectsUseCase.Execute(userId, id);
             }
-            else
-            {
-                return await _getProjectsUseCase.Execute(userId, id, req.password);
-            }
+
+            return await _getProjectsUseCase.Execute(userId, id, req.password);
         }
+
         [Authorize]
         [HttpPut("variables")]
         public async Task<ActionResult> UpdateVariables([FromBody] UpdateVariablesRequest updateVariablesRequest)
         {
-            var updated = await _updateProjectVariablesUseCase.Execute(updateVariablesRequest, userId);
+            await _updateProjectVariablesUseCase.Execute(updateVariablesRequest, userId);
             return Ok(new { message = "Variables successfully updated" });
         }
+
         [Authorize]
         [HttpPut("update")]
         public async Task<ActionResult> UpdateProjectNameAndDescription([FromBody] UpdateNameAndDescriptionRequest updateVariablesRequest)
         {
-            bool name = await _updateProjectNameUseCase.Execute(updateVariablesRequest.project_name, updateVariablesRequest.project_id);
-            bool desc = await _updateProjectDescriptionUseCase.Execute(updateVariablesRequest.project_description, updateVariablesRequest.project_id);
+            bool name = await _updateProjectNameUseCase.Execute(updateVariablesRequest.project_name, updateVariablesRequest.project_id, userId);
+            bool desc = await _updateProjectDescriptionUseCase.Execute(updateVariablesRequest.project_description, updateVariablesRequest.project_id, userId);
+
             if (name || desc)
             {
                 return Ok(new { message = "Project successfully updated" });
             }
-            else
-            {
-                return Ok(new { message = "Nothing updated" });
-            }
+
+            return Ok(new { message = "Nothing updated" });
         }
+
         [Authorize]
         [HttpPut("admin")]
         public async Task<ActionResult> TurnMemberToAdmin([FromBody] TurnIntoAdminRequest request)
@@ -91,12 +93,10 @@ namespace envmanager.src.app.controllers
             bool result = await _turnIntoAdminUseCase.Execute(request, userId);
             if (result)
             {
-                return Ok(new { message = "Member promoted to administrator suceffuly" });
+                return Ok(new { message = "Member promoted to administrator successfully" });
             }
-            else
-            {
-                return Ok(new { message = "Nothin updated" });
-            }
+
+            return Ok(new { message = "Nothing updated" });
         }
     }
 }

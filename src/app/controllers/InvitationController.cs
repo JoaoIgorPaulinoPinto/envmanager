@@ -1,4 +1,3 @@
-Ôªøusing envmanager.src.services.interfaces;
 using envmanager.src.services.usecases.invitation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +18,7 @@ namespace envmanager.src.app.controllers
             _createInvitationUseCase = createInvitationUseCase;
         }
         private string userId => User.Claims.FirstOrDefault(c => c.Type == "id")?.Value
-                   ?? throw new UnauthorizedAccessException("Usu√°rio inv√°lido no token.");
+                   ?? throw new UnauthorizedAccessException("Usu·rio inv·lido no token.");
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateInvite([FromBody] CreateInviteRequest request)

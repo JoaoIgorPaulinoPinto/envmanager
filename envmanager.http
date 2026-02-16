@@ -1,106 +1,164 @@
-﻿@envmanager_HostAddress = http://localhost:5115
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTMyZjdjNTEyNzU4ZGYzNzFjNmEzZSIsImVtYWlsIjoiam9hb2lnb3JwYXVsaW5vcGludG9AZ21haWwuY29tIiwianRpIjoiNjJjZWJhNjItNjcxZi00YmQxLWExZTItYjgwZjRhMTgyYzBiIiwiZXhwIjoxNzcxMjYxNjQzLCJpc3MiOiJlbnZtYW5hZ2VyX2FwaSIsImF1ZCI6ImVudm1hbmFnZXJfYXBpIn0.5m-KEBF1RMkw8qeL2aes2Zwa02LenaRk3iWGR-HawPY
-@refreshToken = 69932ff0512758df371c6a40
+﻿# ==============================================================================
+# 💡 GUIA DE USO RÁPIDO
+# ==============================================================================
+# 1. AUTH: Execute o 'Login' (1.2) primeiro. O token é capturado automaticamente.
+# 2. DINAMISMO: As variáveis {{accessToken}} e {{refreshToken}} se atualizam 
+#    sozinhas após o login bem-sucedido.
+# 3. IDs: Para testar rotas específicas, basta colar o ID desejado nas variáveis 
+#    @lastUserId ou @lastProjectId no topo do arquivo.
+# 4. HEADERS: Content-Type e Authorization já estão pré-configurados em cada rota.
+# 5. DICA: No VS Code, clique em 'Send Request' acima de cada método para testar.
+# ==============================================================================
 
-### 1. Criar usuario (Cadastro)
-POST {{envmanager_HostAddress}}/user
-Content-Type: application/json
+
+
+### Configurações de Ambiente
+@hostname = localhost
+@port = 5115
+@baseUrl = http://{{hostname}}:{{port}}
+@contentType = application/json
+
+### Variáveis de Estado (Atualize conforme necessário)
+@lastUserId = 699375d49a2b9c29f0541fc9
+@lastProjectId = 6993754e9a2b9c29f0541fc8
+
+# Captura automática de tokens após rodar a requisição de Login
+@accessToken = {{login.response.body.accessToken}}
+@refreshToken = {{login.response.body.refreshToken}}
+
+# ==========================================
+# 1. AUTENTICAÇÃO E USUÁRIO
+# ==========================================
+
+### 1.1. Cadastro de Usuário (Signup)
+POST {{baseUrl}}/user
+Content-Type: {{contentType}}
+
 {
-  "user_name": "Pedro 123",
-  "email": "pedro123@gmail.com",
+  "user_name": "João Silva",
+  "email": "joao2@gmail.com",
   "password": "123456"
 }
 
-### 2. Fazer Login
+### 1.2. Login
 # @name login
-POST {{envmanager_HostAddress}}/auth
-Content-Type: application/json
+POST {{baseUrl}}/auth
+Content-Type: {{contentType}}
+
 {
-  "email": "joaoigorpaulinopinto@gmail.com",
+  "email": "joao2@gmail.com",
   "password": "123456"
 }
 
-### 3. Renovar Sessao
-POST {{envmanager_HostAddress}}/auth/refresh
-Content-Type: application/json
+### 1.3. Refresh Token
+POST {{baseUrl}}/auth/refresh
+Content-Type: {{contentType}}
+
 "{{refreshToken}}"
 
-### 4. Listar todos os usuarios
-GET {{envmanager_HostAddress}}/user
-Accept: application/json
+### 1.4. Listar todos os usuários
+GET {{baseUrl}}/user
 Authorization: Bearer {{accessToken}}
+Accept: {{contentType}}
 
-### 4.1. Pegar usuario por id
-GET {{envmanager_HostAddress}}/user/69912b4ae57c8720c9a76773
-Accept: application/json
+### 1.5. Buscar usuário por ID
+GET {{baseUrl}}/user/{{lastUserId}}
 Authorization: Bearer {{accessToken}}
+Accept: {{contentType}}
 
-### 5. Criar projeto
-POST {{envmanager_HostAddress}}/project
-Content-Type: application/json
+# ==========================================
+# 2. GESTÃO DE PROJETOS
+# ==========================================
+
+### 2.1. Criar Projeto
+POST {{baseUrl}}/project
 Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
+
 {
-  "name": "project test com senha",
-  "description": "Enviroment variables management in a center",
+  "name": "Sistema de Gestão Ambiental",
+  "description": "Repositório central de variáveis de ambiente",
   "password": "123"
 }
 
-### 6. Pegar projetos
-GET {{envmanager_HostAddress}}/project
-Accept: application/json
+### 2.2. Listar Projetos (onde sou dono ou membro)
+GET {{baseUrl}}/project
 Authorization: Bearer {{accessToken}}
+Accept: {{contentType}}
 
-### 6.1. Pegar projeto por id
-POST {{envmanager_HostAddress}}/project/69934b7c9461611f510625c8/details
-Content-Type: application/json
-Accept: application/json
+### 2.3. Detalhes do Projeto (Acesso via Senha)
+POST {{baseUrl}}/project/{{lastProjectId}}/details
 Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
 
-### 7. Atualiza variaveis do projeto
-PUT {{envmanager_HostAddress}}/project/variables
-Content-Type: application/json
-Authorization: Bearer {{accessToken}}
 {
-  "project_id": "69932fc4512758df371c6a3f",
+  "password" : "123"
+}
+
+# ==========================================
+# 3. CONFIGURAÇÕES E MEMBROS
+# ==========================================
+
+### 3.1. Atualizar Dados Básicos do Projeto
+PUT {{baseUrl}}/project/update
+Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "project_id": "{{lastProjectId}}",
+  "project_name" : "Nome Modificado V2",
+  "project_description" :"Descrição atualizada via API"
+}
+
+### 3.2. Sincronizar Variáveis (Upsert)
+PUT {{baseUrl}}/project/variables
+Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "project_id": "{{lastProjectId}}",
   "variables": [
     {
-      "variable": "DEFAULT_API_KEY",
+      "variable": "DEFAULT_API_KEY_3",
       "Value": "http://localhost:3000/"
+    },
+    {
+      "variable": "DB_CONNECTION",
+      "Value": "mongodb://localhost:27017"
     }
   ]
 }
 
-### 8. Criar um convite para projeto
-POST {{envmanager_HostAddress}}/invite
-Content-Type: application/json
+### 3.3. Promover Membro a Administrador
+PUT {{baseUrl}}/project/admin
 Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
+
 {
-  "invited_user_id": "69932ff0512758df371c6a40",
-  "project_id": "69932fc4512758df371c6a3f"
+  "user_id": "{{lastUserId}}",
+  "project_id" : "{{lastProjectId}}"
 }
 
-### 9. Aceitar convite (via token)
-POST {{envmanager_HostAddress}}/invite/answer
-Content-Type: application/json
+# ==========================================
+# 4. CONVITES E ACESSO EXTERNO
+# ==========================================
+
+### 4.1. Enviar Convite para Usuário
+POST {{baseUrl}}/invite
 Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
+
 {
-  "token" :"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbnZpdGVySWQiOiI2OTkxMmI0YWU1N2M4NzIwYzlhNzY3NzMiLCJpbnZpdGVkSWQiOiI2OThkZmNmZTZiMzE3ZTQ0OTMxMWUzOTIiLCJwcm9qZWN0SWQiOiI2OTkxZGNiYjAwNzAwYTQyYzZlNTVhZjIiLCJqdGkiOiI3ZmRiNzljNS0yODFhLTRjM2MtYWMyZS1iNjEwNzFhNTExYzEiLCJleHAiOjE3NzEyNzI5OTEsImlzcyI6ImVudm1hbmFnZXJfYXBpIiwiYXVkIjoiZW52bWFuYWdlcl9hcGkifQ.9AY538qwoyDTwTYbx2Oaagw9Lr5r7BjVzYNzSob8Fcs",
+  "invited_user_id": "699375d49a2b9c29f0541fc9",
+  "project_id": "{{lastProjectId}}"
+}
+
+### 4.2. Responder ao Convite (Aceitar/Recusar)
+POST {{baseUrl}}/invite/answer
+Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "token" :"COLE_O_TOKEN_DO_JWT_DO_CONVITE_AQUI",
   "accepted" : true
-}
-### 10. Atualiza nome e descrição do projeto
-PUT {{envmanager_HostAddress}}/project/update
-Content-Type: application/json
-Authorization: Bearer {{accessToken}}
-{
-  "project_id": "6991dcbb00700a42c6e55af2",
-  "project_name" : "nome modificado",
-  "project_description" :"descricao modificada"
-}
-### 10. Atualiza nome e descrição do projeto
-PUT {{envmanager_HostAddress}}/project/admin
-Content-Type: application/json
-Authorization: Bearer {{accessToken}}
-{
-  "user_id": "698dfcfe6b317e449311e392",
-  "project_id" : "6991dcbb00700a42c6e55af2"
 }
