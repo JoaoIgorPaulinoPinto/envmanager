@@ -56,9 +56,6 @@ Content-Type: application/json
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
-{
-  "password": "123"
-}
 ### 7. Atualiza variaveis do projeto
 PUT {{envmanager_HostAddress}}/project/variables
 Content-Type: application/json
