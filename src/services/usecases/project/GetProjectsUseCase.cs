@@ -29,5 +29,13 @@ namespace envmanager.src.services.usecases.project
             }
             return await _projectsRepository.GetProjectById(userId, projId);
         }
+        public async Task<ProjectDtos.GetProjectByIdResponse> Execute(string userId, string projId, string password)
+        {
+            if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(projId))
+            {
+                throw new ArgumentException("The provided User ID is invalid.");
+            }
+            return await _projectsRepository.GetProjectById(userId, projId, password);
+        }
     }
 }

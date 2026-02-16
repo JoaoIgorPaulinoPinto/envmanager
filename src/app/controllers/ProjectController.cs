@@ -50,10 +50,17 @@ namespace envmanager.src.app.controllers
             return await _getProjectsUseCase.Execute(userId);
         }
         [Authorize]
-        [HttpGet("{id}")]
-        public async Task<GetProjectByIdResponse> Get([FromRoute] string id)
+        [HttpPost("{id}/details")]
+        public async Task<GetProjectByIdResponse> Get([FromRoute] string id, [FromBody] GetProjectDetailsRequest? req)
         {
-            return await _getProjectsUseCase.Execute(userId, id);
+            if (req == null || string.IsNullOrEmpty(req.password))
+            {
+                return await _getProjectsUseCase.Execute(userId, id);
+            }
+            else
+            {
+                return await _getProjectsUseCase.Execute(userId, id, req.password);
+            }
         }
         [Authorize]
         [HttpPut("variables")]

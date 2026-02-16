@@ -1,4 +1,5 @@
 ﻿using envmanager.src.data.service.schemes;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -25,7 +26,9 @@ namespace envmanager.src.data.service.dtos
             public string name { get; set; } = string.Empty;
             public string access_link { get; set; } = string.Empty;
             public string description { get; set; } = string.Empty;
+            public bool need_password { get; set; } = false;
         }
+        public record GetProjectDetailsRequest(string? password);
         public record GetProjectByIdResponse
         {
             [Required]

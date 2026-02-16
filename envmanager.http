@@ -1,6 +1,6 @@
 ﻿@envmanager_HostAddress = http://localhost:5115
-@accessToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTMyZjdjNTEyNzU4ZGYzNzFjNmEzZSIsImVtYWlsIjoiam9hb2lnb3JwYXVsaW5vcGludG9AZ21haWwuY29tIiwianRpIjoiNjQ4ZDZlZTEtN2VkMi00MWQwLWE0NDMtMmQyMGZlMzk2NjE1IiwiZXhwIjoxNzcxMjU3ODA4LCJpc3MiOiJlbnZtYW5hZ2VyX2FwaSIsImF1ZCI6ImVudm1hbmFnZXJfYXBpIn0.HefkXE08lqeLqFXy2_PfY-TBijPPNpHrbhQmlvqG7dA
-@refreshToken =69932f7c512758df371c6a3e
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTMyZjdjNTEyNzU4ZGYzNzFjNmEzZSIsImVtYWlsIjoiam9hb2lnb3JwYXVsaW5vcGludG9AZ21haWwuY29tIiwianRpIjoiNjJjZWJhNjItNjcxZi00YmQxLWExZTItYjgwZjRhMTgyYzBiIiwiZXhwIjoxNzcxMjYxNjQzLCJpc3MiOiJlbnZtYW5hZ2VyX2FwaSIsImF1ZCI6ImVudm1hbmFnZXJfYXBpIn0.5m-KEBF1RMkw8qeL2aes2Zwa02LenaRk3iWGR-HawPY
+@refreshToken = 69932ff0512758df371c6a40
 
 ### 1. Criar usuario (Cadastro)
 POST {{envmanager_HostAddress}}/user
@@ -40,9 +40,9 @@ POST {{envmanager_HostAddress}}/project
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 {
-  "name": "project test",
+  "name": "project test com senha",
   "description": "Enviroment variables management in a center",
-  "password": ""
+  "password": "123"
 }
 
 ### 6. Pegar projetos
@@ -51,10 +51,14 @@ Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### 6.1. Pegar projeto por id
-GET {{envmanager_HostAddress}}/project/69932fc4512758df371c6a3f
+POST {{envmanager_HostAddress}}/project/69934b7c9461611f510625c8/details
+Content-Type: application/json
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
+{
+  "password": "123"
+}
 ### 7. Atualiza variaveis do projeto
 PUT {{envmanager_HostAddress}}/project/variables
 Content-Type: application/json

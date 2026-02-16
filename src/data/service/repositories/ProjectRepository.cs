@@ -56,6 +56,7 @@ namespace envmanager.src.data.service.repositories
                 name = p.ProjectName,
                 description = p.Description,
                 isOwner = p.UserId == userId,
+                need_password = !string.IsNullOrEmpty(p.Password),
             }).ToList();
         }
 
@@ -75,11 +76,67 @@ namespace envmanager.src.data.service.repositories
 
             var project = await _context.Projects.Find(filter).FirstOrDefaultAsync();
 
+            if (!string.IsNullOrEmpty(project.Password)) throw new BusinessException("Password is required to access this project");
+
             if (project == null)
             {
-                throw new KeyNotFoundException("Project not found or access denied.");
+                throw new KeyNotFoundException("Project not found.");
             }
 
+            var memberResponses = new List<GetMemberResponse>();
+            foreach (var m in project.Members)
+            {
+                memberResponses.Add(new GetMemberResponse
+                {
+                    Name = await GetUserById(m.Id),
+                    isAdmin = m.Id == project.UserId
+                });
+            }
+
+            return new GetProjectByIdResponse
+            {
+                id = project.Id,
+                name = project.ProjectName,
+                description = project.Description,
+                variables = project.Variables.Select(v => new GetVariableResponse
+                {
+                    id = v.Id ?? "",
+                    variable = v.Variable,
+                    Value = v.Value
+                }).ToList(),
+                members = memberResponses,
+                access_link = project.AccesLink,
+                isOwner = userId == project.UserId
+            };
+        }
+        public async Task<GetProjectByIdResponse> GetProjectById(string userId, string projId, string password)
+        {
+
+            if (string.IsNullOrEmpty(password)) throw new ArgumentNullException("Password is required to access this project");
+
+            var filter = Builders<Project>.Filter.And(
+                Builders<Project>.Filter.Eq(p => p.Id, projId),
+                Builders<Project>.Filter.Or(
+                    Builders<Project>.Filter.Eq(p => p.UserId, userId),
+                    Builders<Project>.Filter.ElemMatch(p => p.Members, m => m.Id == userId)
+                )
+            );
+
+            var project = await _context.Projects.Find(filter).FirstOrDefaultAsync();
+
+            if (project == null )
+            {
+                throw new KeyNotFoundException("Project not found");
+            }
+            if(!string.IsNullOrEmpty(project.Password) )
+            {
+                bool isPasswordValid = _secService.VerifyPassword(project.Password, password);
+
+                if (!isPasswordValid)
+                {
+                    throw new BusinessException("Access denied. Invalid password.");
+                }
+            }
             var memberResponses = new List<GetMemberResponse>();
             foreach (var m in project.Members)
             {

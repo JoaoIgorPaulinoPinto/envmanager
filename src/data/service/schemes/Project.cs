@@ -28,6 +28,6 @@ namespace envmanager.src.data.service.schemes
         public List<ProjectMember> Members { get; set; } = new List<ProjectMember>();
         [BsonElement("access_link")]
         [MinLength(1), MaxLength(255)]
-        public string AccesLink { get; set; } = "";
+        public string AccesLink { get; set; } = ""; 
     }
 }
