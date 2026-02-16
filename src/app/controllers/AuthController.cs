@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using static envmanager.src.data.service.dtos.AuthDtos;
 
 [ApiController]
-[Route("[controller]")]
+[Route("auth")]
 public class AuthController : ControllerBase
 {
     private readonly IAuthLoginUseCase _authLoginUseCase;

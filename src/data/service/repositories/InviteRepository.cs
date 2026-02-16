@@ -153,6 +153,7 @@ namespace envmanager.src.data.service.repositories
             {
                 id = invite.Id!,
                 invited_user = invited.UserName,
+                inviter_user = inviter.UserName,
                 project = project.ProjectName,
                 jwt_token = jwt,
                 isValid = true

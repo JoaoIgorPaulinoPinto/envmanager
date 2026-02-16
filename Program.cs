@@ -13,12 +13,17 @@ using envmanager.src.services.interfaces.project;
 using envmanager.src.services.usecases.project;
 using Scalar.AspNetCore;
 using envmanager.src.services.usecases.invitation;
+using Microsoft.AspNetCore.SignalR; // Adicionado
 
 var builder = WebApplication.CreateBuilder(args);
 
 // --- Configurações de Segurança ---
-var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new ArgumentNullException("JWT Key is not configured in appsettings.json");
+var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new ArgumentNullException("JWT Key is not configured");
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "envmanager_api";
+
+// --- CONFIGURAÇÃO SIGNALR & AUTH ---
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -37,6 +42,21 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = jwtIssuer,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
         ClockSkew = TimeSpan.Zero
+    };
+
+    // Permite que o SignalR receba o token via QueryString (padrão do protocolo)
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/notificationHub"))
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
     };
 });
 
@@ -59,19 +79,31 @@ builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
 // --- Use Cases ---
-builder.Services.AddScoped<IGetUsersUseCase, GetUsersUseCase>(); // get users
-builder.Services.AddScoped<ICreateUserUseCase, CreateUserUseCase>(); // create users
-builder.Services.AddScoped<IValidateRefreshToken, ValidateRefreshToken>(); // validade refresh token
-builder.Services.AddScoped<IAuthLoginUseCase, AuthLoginUseCase>(); // athentication 
-builder.Services.AddScoped<IGetProjectsUseCase, GetProjectsUseCase>(); // get projects
-builder.Services.AddScoped<ICreateProjectUseCase, CreateProjectUseCase>(); // create projects
-builder.Services.AddScoped<IUpdateProjectVariablesUseCase, UpdateProjectVariablesUseCase>(); // update project variables 
-builder.Services.AddScoped<ICreateInviteUseCase, CreateInviteUseCase>(); // create invites to projects
-builder.Services.AddScoped<IUpdateProjectDescriptionUseCase, UpdateProjectDescriptionUseCase>(); // update project name
-builder.Services.AddScoped<IUpdateProjectNameUseCase, UpdateProjectNameUseCase>(); // update project name
-builder.Services.AddScoped<IResponseInvitationUseCase, ResponseInvitationUseCase>(); // accept or decline invites to projects
-builder.Services.AddScoped<ITurnIntoAdminUseCase, TurnIntoAdminUseCase>(); // turn a member into a administrator of the project
-builder.Services.AddSingleton<ITokenFactory, TokenFactory>(); // token factory
+builder.Services.AddScoped<IGetUsersUseCase, GetUsersUseCase>();
+builder.Services.AddScoped<ICreateUserUseCase, CreateUserUseCase>();
+builder.Services.AddScoped<IValidateRefreshToken, ValidateRefreshToken>();
+builder.Services.AddScoped<IAuthLoginUseCase, AuthLoginUseCase>();
+builder.Services.AddScoped<IGetProjectsUseCase, GetProjectsUseCase>();
+builder.Services.AddScoped<ICreateProjectUseCase, CreateProjectUseCase>();
+builder.Services.AddScoped<IUpdateProjectVariablesUseCase, UpdateProjectVariablesUseCase>();
+builder.Services.AddScoped<ICreateInviteUseCase, CreateInviteUseCase>();
+builder.Services.AddScoped<IUpdateProjectDescriptionUseCase, UpdateProjectDescriptionUseCase>();
+builder.Services.AddScoped<IUpdateProjectNameUseCase, UpdateProjectNameUseCase>();
+builder.Services.AddScoped<IResponseInvitationUseCase, ResponseInvitationUseCase>();
+builder.Services.AddScoped<ITurnIntoAdminUseCase, TurnIntoAdminUseCase>();
+builder.Services.AddSingleton<ITokenFactory, TokenFactory>();
+
+// --- Configuração de CORS (Obrigatório para o SignalR) ---
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("SignalRPolicy", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000", "http://127.0.0.1:3000") // URLs do seu front
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials(); // Importante para Auth
+    });
+});
 
 var app = builder.Build();
 
@@ -79,16 +111,22 @@ app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi(); app.MapScalarApiReference();
+    app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
+
+// Use o CORS antes da Auth
+app.UseCors("SignalRPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.Map("/", () => "Server Active!");
+// --- Mapeamento do Hub ---
+app.MapHub<NotificationHub>("/notificationHub");
 
+app.Map("/", () => "Server Active!");
 app.Run();

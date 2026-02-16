@@ -16,6 +16,7 @@ namespace envmanager.src.data.service.dtos
         {
             public string id { get; set; } = "";
             public string invited_user { get; set; } = "";
+            public string inviter_user { get; set; } = "";
             public string project { get; set; } = "";
             public string jwt_token { get; set; } = ""; 
             public bool isValid { get; set; } = false;

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using static envmanager.src.data.service.dtos.UsersDtos;
 
 [ApiController]
-[Route("[controller]")]
+[Route("user")]
 public sealed class UserController : ControllerBase
 {
     private readonly IGetUsersUseCase _getUsersUseCase;

@@ -1,13 +1,13 @@
 ﻿@envmanager_HostAddress = http://localhost:5115
-@accessToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTEyYjRhZTU3Yzg3MjBjOWE3Njc3MyIsImVtYWlsIjoiam9hb2lnb3JwYXVsaW5vcGludG8yMDA2QGVtYWlsLmNvbSIsImp0aSI6ImZjYjk0MDU1LWQ4OTYtNDVkOS05NDkwLTkwNTc2YzgzZGNhNSIsImV4cCI6MTc3MTE4NzAyNiwiaXNzIjoiZW52bWFuYWdlcl9hcGkiLCJhdWQiOiJlbnZtYW5hZ2VyX2FwaSJ9.OH6CQPxTs0C2Y38O6SqZKiOP7kPbvt0s5oKNFUPPQz0
-@refreshToken = 2f99873eb9fc442bab28d1d078e2383c
+@accessToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTMyZjdjNTEyNzU4ZGYzNzFjNmEzZSIsImVtYWlsIjoiam9hb2lnb3JwYXVsaW5vcGludG9AZ21haWwuY29tIiwianRpIjoiNjQ4ZDZlZTEtN2VkMi00MWQwLWE0NDMtMmQyMGZlMzk2NjE1IiwiZXhwIjoxNzcxMjU3ODA4LCJpc3MiOiJlbnZtYW5hZ2VyX2FwaSIsImF1ZCI6ImVudm1hbmFnZXJfYXBpIn0.HefkXE08lqeLqFXy2_PfY-TBijPPNpHrbhQmlvqG7dA
+@refreshToken =69932f7c512758df371c6a3e
 
 ### 1. Criar usuario (Cadastro)
 POST {{envmanager_HostAddress}}/user
 Content-Type: application/json
 {
-  "user_name": "Joao Igor Paulino Pinto",
-  "email": "joaoigorpaulinopinto2006@email.com",
+  "user_name": "Pedro 123",
+  "email": "pedro123@gmail.com",
   "password": "123456"
 }
 
@@ -16,8 +16,8 @@ Content-Type: application/json
 POST {{envmanager_HostAddress}}/auth
 Content-Type: application/json
 {
-  "email": "joaoigorpaulinopinto5@email.com",
-  "password": "123123"
+  "email": "joaoigorpaulinopinto@gmail.com",
+  "password": "123456"
 }
 
 ### 3. Renovar Sessao
@@ -51,7 +51,7 @@ Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### 6.1. Pegar projeto por id
-GET {{envmanager_HostAddress}}/project/6991dcbb00700a42c6e55af2
+GET {{envmanager_HostAddress}}/project/69932fc4512758df371c6a3f
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -60,7 +60,7 @@ PUT {{envmanager_HostAddress}}/project/variables
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 {
-  "project_id": "6991dcbb00700a42c6e55af2",
+  "project_id": "69932fc4512758df371c6a3f",
   "variables": [
     {
       "variable": "DEFAULT_API_KEY",
@@ -74,8 +74,8 @@ POST {{envmanager_HostAddress}}/invite
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 {
-  "invited_user_id": "698dfcfe6b317e449311e392",
-  "project_id": "6991dcbb00700a42c6e55af2"
+  "invited_user_id": "69932ff0512758df371c6a40",
+  "project_id": "69932fc4512758df371c6a3f"
 }
 
 ### 9. Aceitar convite (via token)
