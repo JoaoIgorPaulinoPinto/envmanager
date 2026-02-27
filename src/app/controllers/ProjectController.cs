@@ -32,7 +32,7 @@ namespace envmanager.src.app.controllers
             _getProjectsUseCase = getProjectsUseCase;
             _updateProjectDescriptionUseCase = updateProjectDescription;
         }
-
+            
         private string userId => User.Claims.FirstOrDefault(c => c.Type == "id")?.Value
                            ?? throw new UnauthorizedAccessException("Invalid user on the token.");
 

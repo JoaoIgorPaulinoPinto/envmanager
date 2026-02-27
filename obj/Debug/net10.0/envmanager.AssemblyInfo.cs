@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("envmanager")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+922e719419cc3cb95e3b12bbebbdc22650b199dd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+37d62a6d31efa7245f465ac7b40d631462536b60")]
 [assembly: System.Reflection.AssemblyProductAttribute("envmanager")]
 [assembly: System.Reflection.AssemblyTitleAttribute("envmanager")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

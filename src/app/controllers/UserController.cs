@@ -15,19 +15,21 @@ public sealed class UserController : ControllerBase
         _getUsersUseCase = getUsersUseCase;
         _createUsersUseCase = createUserUseCase;
     }
+    private string userId => User.Claims.FirstOrDefault(c => c.Type == "id")?.Value
+                           ?? throw new UnauthorizedAccessException("Invalid user on the token.");
 
     [Authorize]
-    [HttpGet]
-    public async Task<ActionResult<List<GetUsersResponse>>> Get()
+    [HttpGet("all")]
+    public async Task<ActionResult<List<GetUsersResponse>>> GetAll()
     {
         return Ok(await _getUsersUseCase.Execute());
     }
 
     [Authorize]
-    [HttpGet("{id}")]
-    public async Task<ActionResult<GetUsersResponse>> Get([FromRoute] string id)
+    [HttpGet("me")]
+    public async Task<ActionResult<GetUsersResponse>> Get()
     {
-        var user = await _getUsersUseCase.Execute(id);
+        var user = await _getUsersUseCase.Execute(userId);
         return Ok(new { message = "User successfully listed", user });
     }
 

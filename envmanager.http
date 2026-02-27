@@ -23,7 +23,7 @@
 @lastProjectId = 6993754e9a2b9c29f0541fc8
 
 # Captura automática de tokens após rodar a requisição de Login
-@accessToken = {{login.response.body.accessToken}}
+@accessToken = {{login.response.body.token}}
 @refreshToken = {{login.response.body.refreshToken}}
 
 # ==========================================
@@ -33,11 +33,10 @@
 ### 1.1. Cadastro de Usuário (Signup)
 POST {{baseUrl}}/user
 Content-Type: {{contentType}}
-
 {
   "user_name": "João Silva",
-  "email": "joao2@gmail.com",
-  "password": "123456"
+  "email": "j@gmail.com",
+  "password": "1"
 }
 
 ### 1.2. Login
@@ -46,10 +45,12 @@ POST {{baseUrl}}/auth
 Content-Type: {{contentType}}
 
 {
-  "email": "joao2@gmail.com",
-  "password": "123456"
+  "email": "j@gmail.com",
+  "password": "1"
 }
 
+### Atualize a variável assim:
+@accessToken = {{login.response.body.$.token}}
 ### 1.3. Refresh Token
 POST {{baseUrl}}/auth/refresh
 Content-Type: {{contentType}}
@@ -62,7 +63,7 @@ Authorization: Bearer {{accessToken}}
 Accept: {{contentType}}
 
 ### 1.5. Buscar usuário por ID
-GET {{baseUrl}}/user/{{lastUserId}}
+GET {{baseUrl}}/user/me
 Authorization: Bearer {{accessToken}}
 Accept: {{contentType}}
 
@@ -76,8 +77,8 @@ Authorization: Bearer {{accessToken}}
 Content-Type: {{contentType}}
 
 {
-  "name": "Sistema de Gestão Ambiental",
-  "description": "Repositório central de variáveis de ambiente",
+  "name": "Gitanalysos",
+  "description": "Sistema de analises de repositorios de candidatos a vagas de tecnologia",
   "password": "123"
 }
 
@@ -90,14 +91,13 @@ Accept: {{contentType}}
 POST {{baseUrl}}/project/{{lastProjectId}}/details
 Authorization: Bearer {{accessToken}}
 Content-Type: {{contentType}}
-
 {
   "password" : "123"
 }
 
-# ==========================================
-# 3. CONFIGURAÇÕES E MEMBROS
-# ==========================================
+### ==========================================
+### 3. CONFIGURAÇÕES E MEMBROS
+### ==========================================
 
 ### 3.1. Atualizar Dados Básicos do Projeto
 PUT {{baseUrl}}/project/update
@@ -116,10 +116,10 @@ Authorization: Bearer {{accessToken}}
 Content-Type: {{contentType}}
 
 {
-  "project_id": "{{lastProjectId}}",
+  "project_id": "69a203c48c55c90b4503c2b1",
   "variables": [
     {
-      "variable": "DEFAULT_API_KEY_3",
+      "variable": "DEFAULT_API_KEY",
       "Value": "http://localhost:3000/"
     },
     {

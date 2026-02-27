@@ -40,7 +40,7 @@ namespace envmanager.src.data.utils
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-
+            
         // --- Specialized Factory Methods ---
 
         public string CreateUserToken(User user)
