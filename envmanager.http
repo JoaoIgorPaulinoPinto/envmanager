@@ -1,77 +1,81 @@
-﻿# ==============================================================================
-# 💡 GUIA DE USO RÁPIDO
 # ==============================================================================
-# 1. AUTH: Execute o 'Login' (1.2) primeiro. O token é capturado automaticamente.
-# 2. DINAMISMO: As variáveis {{accessToken}} e {{refreshToken}} se atualizam 
-#    sozinhas após o login bem-sucedido.
-# 3. IDs: Para testar rotas específicas, basta colar o ID desejado nas variáveis 
-#    @lastUserId ou @lastProjectId no topo do arquivo.
-# 4. HEADERS: Content-Type e Authorization já estão pré-configurados em cada rota.
-# 5. DICA: No VS Code, clique em 'Send Request' acima de cada método para testar.
+# GUIA RAPIDO
+# ==============================================================================
+# 1) Execute "Login" primeiro.
+# 2) As variaveis accessToken e refreshToken sao preenchidas automaticamente.
+# 3) Atualize lastUserId e lastProjectId conforme os dados do seu ambiente.
 # ==============================================================================
 
-
-
-### Configurações de Ambiente
+### Configuracao de ambiente
 @hostname = localhost
 @port = 5115
 @baseUrl = http://{{hostname}}:{{port}}
 @contentType = application/json
 
-### Variáveis de Estado (Atualize conforme necessário)
-@lastUserId = 699375d49a2b9c29f0541fc9
-@lastProjectId = 6993754e9a2b9c29f0541fc8
+### Variaveis de estado
+@lastUserId = COLE_USER_ID_AQUI
+@lastProjectId = COLE_PROJECT_ID_AQUI
 
-# Captura automática de tokens após rodar a requisição de Login
-@accessToken = {{login.response.body.token}}
-@refreshToken = {{login.response.body.refreshToken}}
+### Tokens capturados da requisicao "Login"
+@accessToken = {{login.response.body.$.token}}
+@refreshToken = {{login.response.body.$.refreshToken}}
 
 # ==========================================
-# 1. AUTENTICAÇÃO E USUÁRIO
+# 1. AUTENTICACAO E USUARIO
 # ==========================================
 
-### 1.1. Cadastro de Usuário (Signup)
+### 1.1 Cadastro de usuario
 POST {{baseUrl}}/user
 Content-Type: {{contentType}}
+
 {
-  "user_name": "João Silva",
-  "email": "j@gmail.com",
-  "password": "1"
+  "user_name": "Joao Silva",
+  "email": "joao.silva@example.com",
+  "password": "1234"
 }
 
-### 1.2. Login
+### 1.2 Login
 # @name login
 POST {{baseUrl}}/auth
 Content-Type: {{contentType}}
 
 {
-  "email": "j@gmail.com",
-  "password": "1"
+  "email": "joao.silva@example.com",
+  "password": "1234"
 }
 
-### Atualize a variável assim:
-@accessToken = {{login.response.body.$.token}}
-### 1.3. Refresh Token
+### 1.3 Refresh de sessao
 POST {{baseUrl}}/auth/refresh
 Content-Type: {{contentType}}
 
-"{{refreshToken}}"
+{
+  "refreshToken": "{{refreshToken}}"
+}
 
-### 1.4. Listar todos os usuários
-GET {{baseUrl}}/user
+### 1.4 Logout
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+### 1.5 Listar todos os usuarios
+GET {{baseUrl}}/user/all
 Authorization: Bearer {{accessToken}}
 Accept: {{contentType}}
 
-### 1.5. Buscar usuário por ID
+### 1.6 Usuario autenticado
 GET {{baseUrl}}/user/me
 Authorization: Bearer {{accessToken}}
 Accept: {{contentType}}
 
 # ==========================================
-# 2. GESTÃO DE PROJETOS
+# 2. GESTAO DE PROJETOS
 # ==========================================
 
-### 2.1. Criar Projeto
+### 2.1 Criar projeto
 POST {{baseUrl}}/project
 Authorization: Bearer {{accessToken}}
 Content-Type: {{contentType}}
@@ -82,41 +86,49 @@ Content-Type: {{contentType}}
   "password": "123"
 }
 
-### 2.2. Listar Projetos (onde sou dono ou membro)
+### 2.2 Listar projetos
 GET {{baseUrl}}/project
 Authorization: Bearer {{accessToken}}
 Accept: {{contentType}}
 
-### 2.3. Detalhes do Projeto (Acesso via Senha)
+### 2.3 Detalhes do projeto (sem senha)
 POST {{baseUrl}}/project/{{lastProjectId}}/details
 Authorization: Bearer {{accessToken}}
 Content-Type: {{contentType}}
+
+{}
+
+### 2.4 Detalhes do projeto (com senha)
+POST {{baseUrl}}/project/{{lastProjectId}}/details
+Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
+
 {
-  "password" : "123"
+  "password": "123"
 }
 
-### ==========================================
-### 3. CONFIGURAÇÕES E MEMBROS
-### ==========================================
+# ==========================================
+# 3. CONFIGURACOES E MEMBROS
+# ==========================================
 
-### 3.1. Atualizar Dados Básicos do Projeto
+### 3.1 Atualizar nome e descricao do projeto
 PUT {{baseUrl}}/project/update
 Authorization: Bearer {{accessToken}}
 Content-Type: {{contentType}}
 
 {
   "project_id": "{{lastProjectId}}",
-  "project_name" : "Nome Modificado V2",
-  "project_description" :"Descrição atualizada via API"
+  "project_name": "Nome Modificado V2",
+  "project_description": "Descricao atualizada via API"
 }
 
-### 3.2. Sincronizar Variáveis (Upsert)
+### 3.2 Sincronizar variaveis (upsert)
 PUT {{baseUrl}}/project/variables
 Authorization: Bearer {{accessToken}}
 Content-Type: {{contentType}}
 
 {
-  "project_id": "69a203c48c55c90b4503c2b1",
+  "project_id": "{{lastProjectId}}",
   "variables": [
     {
       "variable": "DEFAULT_API_KEY",
@@ -129,36 +141,36 @@ Content-Type: {{contentType}}
   ]
 }
 
-### 3.3. Promover Membro a Administrador
+### 3.3 Promover membro para administrador
 PUT {{baseUrl}}/project/admin
 Authorization: Bearer {{accessToken}}
 Content-Type: {{contentType}}
 
 {
   "user_id": "{{lastUserId}}",
-  "project_id" : "{{lastProjectId}}"
+  "project_id": "{{lastProjectId}}"
 }
 
 # ==========================================
-# 4. CONVITES E ACESSO EXTERNO
+# 4. CONVITES
 # ==========================================
 
-### 4.1. Enviar Convite para Usuário
+### 4.1 Enviar convite
 POST {{baseUrl}}/invite
 Authorization: Bearer {{accessToken}}
 Content-Type: {{contentType}}
 
 {
-  "invited_user_id": "699375d49a2b9c29f0541fc9",
+  "invited_user_email": "convidado@example.com",
   "project_id": "{{lastProjectId}}"
 }
 
-### 4.2. Responder ao Convite (Aceitar/Recusar)
+### 4.2 Responder convite (aceitar/recusar)
 POST {{baseUrl}}/invite/answer
 Authorization: Bearer {{accessToken}}
 Content-Type: {{contentType}}
 
 {
-  "token" :"COLE_O_TOKEN_DO_JWT_DO_CONVITE_AQUI",
-  "accepted" : true
+  "token": "COLE_O_TOKEN_DO_JWT_DO_CONVITE_AQUI",
+  "accepted": true
 }

@@ -35,9 +35,7 @@ namespace envmanager.src.services.usecases.user
             {
                 UserName = user.user_name,
                 Email = user.email,
-                Password = _securityService.HashPassword(user.password),
-                RefreshToken = _tokenFactory.GenerateRefreshToken(),
-                RefreshTokenExpiry = DateTime.UtcNow.AddDays(7)
+                Password = _securityService.HashPassword(user.password)
             };
 
             var created = await _userRepository.Create(newUser);

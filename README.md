@@ -44,6 +44,7 @@ The API will start and expose controllers under the routes listed below.
 Base routes (all JSON):
 - `POST /auth` Login
 - `POST /auth/refresh` Refresh access token
+- `POST /auth/logout` Logout and revoke refresh token
 - `GET /user` List users (auth required)
 - `GET /user/{id}` Get user by id (auth required)
 - `POST /user` Create user
@@ -81,6 +82,7 @@ Content-Type: application/json
 
 ## Development Notes
 - OpenAPI/Scalar docs are only enabled in `Development`.
+- Refresh tokens are rotated on every refresh and revoked on logout.
 - Refresh tokens are issued via HTTP-only cookies.
 
 ## Project Structure

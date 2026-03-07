@@ -1,7 +1,8 @@
-﻿using envmanager.src.data.service.schemes;
+using envmanager.src.data.service.schemes;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace envmanager.src.data.utils
@@ -11,6 +12,7 @@ namespace envmanager.src.data.utils
         string CreateUserToken(User user);
         string CreateInviteToken(string inviterId, string invitedId, string projectId);
         string GenerateRefreshToken();
+        string HashRefreshToken(string refreshToken);
         ClaimsPrincipal? GetPrincipalFromToken(string token);
     }
 
@@ -25,7 +27,6 @@ namespace envmanager.src.data.utils
             _issuer = configuration["Jwt:Issuer"] ?? throw new ArgumentNullException("JWT Issuer missing.");
         }
 
-        // --- Core Private Helper ---
         private string GenerateToken(IEnumerable<Claim> claims, DateTime expires)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));
@@ -40,16 +41,15 @@ namespace envmanager.src.data.utils
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-            
-        // --- Specialized Factory Methods ---
 
         public string CreateUserToken(User user)
         {
             var claims = new[] {
-                new Claim("id", user.Id.ToString()),
+                new Claim("id", user.Id),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
+
             return GenerateToken(claims, DateTime.UtcNow.AddMinutes(15));
         }
 
@@ -61,15 +61,30 @@ namespace envmanager.src.data.utils
                 new Claim("projectId", projectId),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
+
             return GenerateToken(claims, DateTime.UtcNow.AddHours(24));
         }
 
-        public string GenerateRefreshToken() => Guid.NewGuid().ToString("N");
+        public string GenerateRefreshToken()
+        {
+            var randomBytes = RandomNumberGenerator.GetBytes(64);
+            return Base64UrlEncoder.Encode(randomBytes);
+        }
 
-        // Returns the payload if valid, or null if tampered/expired
+        public string HashRefreshToken(string refreshToken)
+        {
+            if (string.IsNullOrWhiteSpace(refreshToken))
+                throw new ArgumentException("Refresh token is required.");
+
+            var tokenBytes = Encoding.UTF8.GetBytes(refreshToken);
+            var hashBytes = SHA256.HashData(tokenBytes);
+            return Convert.ToHexString(hashBytes);
+        }
+
         public ClaimsPrincipal? GetPrincipalFromToken(string token)
         {
             var handler = new JwtSecurityTokenHandler();
+
             try
             {
                 return handler.ValidateToken(token, new TokenValidationParameters
@@ -84,7 +99,10 @@ namespace envmanager.src.data.utils
                     ClockSkew = TimeSpan.Zero
                 }, out _);
             }
-            catch { return null; }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

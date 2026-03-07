@@ -21,18 +21,28 @@ namespace envmanager.src.data.service.repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<User?> GetUserByRefreshToken(string refreshToken)
+        public async Task<User?> GetUserByRefreshToken(string refreshTokenHash)
         {
             return await _appDbContext.Users
-                .Find(u => u.RefreshToken == refreshToken)
+                .Find(u => u.RefreshToken == refreshTokenHash)
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<bool> UpdateRefreshToken(string userId, string refreshToken, DateTime refreshTokenExpiry)
+        public async Task<bool> UpdateRefreshToken(string userId, string refreshTokenHash, DateTime refreshTokenExpiry)
         {
             var update = Builders<User>.Update
-                .Set(u => u.RefreshToken, refreshToken)
+                .Set(u => u.RefreshToken, refreshTokenHash)
                 .Set(u => u.RefreshTokenExpiry, refreshTokenExpiry);
+
+            var result = await _appDbContext.Users.UpdateOneAsync(u => u.Id == userId, update);
+            return result.ModifiedCount > 0;
+        }
+
+        public async Task<bool> RevokeRefreshToken(string userId)
+        {
+            var update = Builders<User>.Update
+                .Set(u => u.RefreshToken, string.Empty)
+                .Set(u => u.RefreshTokenExpiry, null);
 
             var result = await _appDbContext.Users.UpdateOneAsync(u => u.Id == userId, update);
             return result.ModifiedCount > 0;

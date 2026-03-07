@@ -7,8 +7,9 @@ namespace envmanager.src.data.service.dtos
         public record CreateInviteRequest
         {
 
-            [Required(ErrorMessage = "Invited user is required")]
-            public string invited_user_id { get; set; } = "";
+            [Required(ErrorMessage = "Invited user email is required")]
+            [EmailAddress(ErrorMessage = "The invited user email must be a valid email address.")]
+            public string invited_user_email { get; set; } = "";
             [Required(ErrorMessage = "Project is required")]
             public string project_id { get; set; } = "";
         }

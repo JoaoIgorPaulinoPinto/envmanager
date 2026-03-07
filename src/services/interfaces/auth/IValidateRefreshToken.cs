@@ -1,7 +1,9 @@
-﻿namespace envmanager.src.services.interfaces.auth
+using static envmanager.src.data.service.dtos.AuthDtos;
+
+namespace envmanager.src.services.interfaces.auth
 {
     public interface IValidateRefreshToken
     {
-        public Task<string> Execute(string refreshToken);
+        Task<SessionTokens> Execute(string refreshToken);
     }
 }

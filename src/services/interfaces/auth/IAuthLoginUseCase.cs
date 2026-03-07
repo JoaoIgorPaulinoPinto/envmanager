@@ -1,9 +1,9 @@
-﻿using static envmanager.src.data.service.dtos.AuthDtos;
+using static envmanager.src.data.service.dtos.AuthDtos;
 
 namespace envmanager.src.services.interfaces.auth
 {
     public interface IAuthLoginUseCase
     {
-        public Task<string> Execute(LoginRequest loginRequest,string refreshToken);
+        Task<SessionTokens> Execute(LoginRequest loginRequest);
     }
 }

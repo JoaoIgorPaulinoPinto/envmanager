@@ -1,4 +1,4 @@
-using envmanager.src.data.utils;
+Ôªøusing envmanager.src.data.utils;
 using envmanager.src.services.interfaces.auth;
 using envmanager.src.services.interfaces.user;
 using envmanager.src.services.usecases.auth;
@@ -17,11 +17,11 @@ using Microsoft.AspNetCore.SignalR; // Adicionado
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- ConfiguraÁıes de SeguranÁa ---
+// --- Configura√ß√µes de Seguran√ßa ---
 var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new ArgumentNullException("JWT Key is not configured");
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "envmanager_api";
 
-// --- CONFIGURA«√O SIGNALR & AUTH ---
+// --- CONFIGURA√á√ÉO SIGNALR & AUTH ---
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 
@@ -44,7 +44,7 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero
     };
 
-    // Permite que o SignalR receba o token via QueryString (padr„o do protocolo)
+    // Permite que o SignalR receba o token via QueryString (padr√£o do protocolo)
     options.Events = new JwtBearerEvents
     {
         OnMessageReceived = context =>
@@ -83,6 +83,7 @@ builder.Services.AddScoped<IGetUsersUseCase, GetUsersUseCase>();
 builder.Services.AddScoped<ICreateUserUseCase, CreateUserUseCase>();
 builder.Services.AddScoped<IValidateRefreshToken, ValidateRefreshToken>();
 builder.Services.AddScoped<IAuthLoginUseCase, AuthLoginUseCase>();
+builder.Services.AddScoped<IAuthLogoutUseCase, AuthLogoutUseCase>();
 builder.Services.AddScoped<IGetProjectsUseCase, GetProjectsUseCase>();
 builder.Services.AddScoped<ICreateProjectUseCase, CreateProjectUseCase>();
 builder.Services.AddScoped<IUpdateProjectVariablesUseCase, UpdateProjectVariablesUseCase>();
@@ -93,18 +94,27 @@ builder.Services.AddScoped<IResponseInvitationUseCase, ResponseInvitationUseCase
 builder.Services.AddScoped<ITurnIntoAdminUseCase, TurnIntoAdminUseCase>();
 builder.Services.AddSingleton<ITokenFactory, TokenFactory>();
 
-// --- ConfiguraÁ„o de CORS (ObrigatÛrio para o SignalR) ---
+// --- Configura√ß√£o de CORS (Obrigat√≥rio para o SignalR) ---
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("SignalRPolicy", policy =>
+//    {
+//        policy.WithOrigins("http://localhost:3000", "http://192.168.1.5:3000", "192.168.1.14") // URLs do seu front
+//              .AllowAnyHeader()
+//              .AllowAnyMethod()
+//              .AllowCredentials(); // Importante para Auth
+//    });
+//});
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("SignalRPolicy", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "http://127.0.0.1:3000") // URLs do seu front
+        policy.SetIsOriginAllowed(_ => true) // Permite qualquer origem dinamicamente
               .AllowAnyHeader()
               .AllowAnyMethod()
-              .AllowCredentials(); // Importante para Auth
+              .AllowCredentials(); // Obrigat√≥rio para o SignalR com Auth/Tokens
     });
 });
-
 var app = builder.Build();
 
 app.UseExceptionHandler();
@@ -115,7 +125,10 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 // Use o CORS antes da Auth
 app.UseCors("SignalRPolicy");
@@ -126,7 +139,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 // --- Mapeamento do Hub ---
-app.MapHub<NotificationHub>("/notificationHub");
+app.MapHub<NotificationHub>("/notificationHub").RequireAuthorization();
 
 app.Map("/", () => "Server Active!");
 app.Run();

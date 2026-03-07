@@ -6,10 +6,9 @@ namespace envmanager.src.data.service.schemes
 {
     public class Invite
     {
-        [Required(ErrorMessage = "Id not provided")]
         [BsonId]
-        [BsonRepresentation(BsonType.String)]
-        public string? Id { get; set; } = "";
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string? Id { get; set; }
         [MinLength(1)]
         [BsonElement("invited_user_id")]
         [Required(ErrorMessage = "invited user not provided")]
