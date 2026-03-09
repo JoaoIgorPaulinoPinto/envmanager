@@ -66,5 +66,10 @@ namespace envmanager.src.data.service.dtos
             public string user_id { get; set; } = string.Empty;
             public string project_id { get; set; } = string.Empty;
         }
+        public record KickMemberFromProjectRequest
+        {
+            public string member_id { get; set; } = string.Empty;
+            public string project_id { get; set; } = string.Empty;
+        }
     }
 }

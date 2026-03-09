@@ -3,8 +3,7 @@ using static envmanager.src.data.service.dtos.ProjectDtos;
 
 namespace envmanager.src.services.interfaces.project
 {
-    public interface IUpdateProjectVariablesUseCase
-    {
+    public interface IUpdateProjectVariablesUseCase{
         public Task<bool> Execute(UpdateVariablesRequest updateVariablesRequest, string userId);
     }
 }

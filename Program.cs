@@ -13,7 +13,8 @@ using envmanager.src.services.interfaces.project;
 using envmanager.src.services.usecases.project;
 using Scalar.AspNetCore;
 using envmanager.src.services.usecases.invitation;
-using Microsoft.AspNetCore.SignalR; // Adicionado
+using Microsoft.AspNetCore.SignalR;
+using envmanager.src.services.interfaces.project_invite; // Adicionado
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -86,7 +87,7 @@ builder.Services.AddScoped<IAuthLoginUseCase, AuthLoginUseCase>();
 builder.Services.AddScoped<IAuthLogoutUseCase, AuthLogoutUseCase>();
 builder.Services.AddScoped<IGetProjectsUseCase, GetProjectsUseCase>();
 builder.Services.AddScoped<ICreateProjectUseCase, CreateProjectUseCase>();
-builder.Services.AddScoped<IUpdateProjectVariablesUseCase, UpdateProjectVariablesUseCase>();
+builder.Services.AddScoped<IDeleteProjectUseCase, UpdateProjectVariablesUseCase>();
 builder.Services.AddScoped<ICreateInviteUseCase, CreateInviteUseCase>();
 builder.Services.AddScoped<IUpdateProjectDescriptionUseCase, UpdateProjectDescriptionUseCase>();
 builder.Services.AddScoped<IUpdateProjectNameUseCase, UpdateProjectNameUseCase>();

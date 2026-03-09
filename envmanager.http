@@ -40,7 +40,7 @@ POST {{baseUrl}}/auth
 Content-Type: {{contentType}}
 
 {
-  "email": "joao.silva@example.com",
+  "email": "jao@gmail.com",
   "password": "1234"
 }
 
@@ -151,6 +151,23 @@ Content-Type: {{contentType}}
   "project_id": "{{lastProjectId}}"
 }
 
+### 3.4 Remover membro do projeto (kick member)
+PUT {{baseUrl}}/project/kick
+Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "member_id": "{{lastUserId}}",
+  "project_id": "{{lastProjectId}}"
+}
+
+### 3.5 Deletar projeto
+DELETE {{baseUrl}}/project/delete
+Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
+
+"{{lastProjectId}}"
+
 # ==========================================
 # 4. CONVITES
 # ==========================================
@@ -161,8 +178,8 @@ Authorization: Bearer {{accessToken}}
 Content-Type: {{contentType}}
 
 {
-  "invited_user_email": "convidado@example.com",
-  "project_id": "{{lastProjectId}}"
+  "invited_user_email": "pedroe@emaila.com",
+  "project_id": "69aca1f3d66c153e0ccca8ef"
 }
 
 ### 4.2 Responder convite (aceitar/recusar)
@@ -174,3 +191,4 @@ Content-Type: {{contentType}}
   "token": "COLE_O_TOKEN_DO_JWT_DO_CONVITE_AQUI",
   "accepted": true
 }
+

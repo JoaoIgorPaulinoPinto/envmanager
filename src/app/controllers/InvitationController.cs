@@ -1,4 +1,4 @@
-using envmanager.src.services.usecases.invitation;
+using envmanager.src.services.interfaces.project_invite;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static envmanager.src.data.service.dtos.InviteDtos;

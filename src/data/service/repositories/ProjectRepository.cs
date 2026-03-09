@@ -3,6 +3,7 @@ using envmanager.src.data.service.interfaces;
 using envmanager.src.data.service.schemes;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using static MongoDB.Bson.Serialization.Serializers.SerializerHelper;
 
 namespace envmanager.src.data.service.repositories
 {
@@ -41,7 +42,13 @@ namespace envmanager.src.data.service.repositories
         public async Task<bool> UpdateVariables(string projectId, List<Key> variables)
         {
             var filter = Builders<Project>.Filter.Eq(p => p.Id, projectId);
-            var update = Builders<Project>.Update.Set(p => p.Variables, variables);
+
+            var cleanedVariables = variables
+                .Where(v => !string.IsNullOrEmpty(v.Variable) || !string.IsNullOrEmpty(v.Value))
+                .ToList();
+
+            var update = Builders<Project>.Update.Set(p => p.Variables, cleanedVariables);
+
             var result = await _context.Projects.UpdateOneAsync(filter, update);
             return result.ModifiedCount > 0;
         }
@@ -85,6 +92,29 @@ namespace envmanager.src.data.service.repositories
             var update = Builders<Project>.Update.Push(p => p.Members, member);
             var result = await _context.Projects.UpdateOneAsync(filter, update);
             return result.ModifiedCount > 0;
+        }
+        public async Task<bool> RemoveMember(string projectId, string memberId)
+        {
+            var filter = Builders<Project>.Filter.Eq(p => p.Id, projectId);
+
+            var update = Builders<Project>.Update.PullFilter(p => p.Members,
+                m => m.Id == memberId);
+
+            var result = await _context.Projects.UpdateOneAsync(filter, update);
+
+            return result.ModifiedCount > 0;
+        }
+
+        public async Task<bool> DeleteProject(string projectId)
+        {
+            var filter = Builders<Project>.Filter.Eq(p => p.Id, projectId);
+            var result = _context.Projects.DeleteOne(filter);
+            return result.DeletedCount > 0;
+        }
+        public async Task<bool> RemoverAdminPrivilege(string projectId)
+        {
+            //implementar
+            return true;
         }
     }
 }

@@ -11,26 +11,32 @@ namespace envmanager.src.app.controllers
     {
         private readonly ICreateProjectUseCase _createProjectUseCase;
         private readonly IGetProjectsUseCase _getProjectsUseCase;
+        private readonly IDeleteProjectUseCase _deleteProjectUseCase;
         private readonly IUpdateProjectVariablesUseCase _updateProjectVariablesUseCase;
         private readonly IUpdateProjectNameUseCase _updateProjectNameUseCase;
         private readonly IUpdateProjectDescriptionUseCase _updateProjectDescriptionUseCase;
         private readonly ITurnIntoAdminUseCase _turnIntoAdminUseCase;
+        private readonly IKickMemberFromProjectUseCase _kickMemberFromProjectUseCase;
 
         public ProjectController(
             ITurnIntoAdminUseCase turnIntoAdminUseCase,
-                IUpdateProjectVariablesUseCase updateProjectVariables,
-                IGetProjectsUseCase getProjectsUseCase,
-                ICreateProjectUseCase createProjectUseCase,
-                IUpdateProjectNameUseCase updateProjectName,
-                IUpdateProjectDescriptionUseCase updateProjectDescription
-                )
+            IUpdateProjectVariablesUseCase updateProjectVariablesUseCase,
+            IDeleteProjectUseCase _deleteProjectUseCase,
+            IGetProjectsUseCase getProjectsUseCase,
+            ICreateProjectUseCase createProjectUseCase,
+            IUpdateProjectNameUseCase updateProjectNameUseCase,
+            IDeleteProjectUseCase deleteProjectUseCase,
+            IUpdateProjectDescriptionUseCase updateProjectDescriptionUseCase,
+            IKickMemberFromProjectUseCase kickMemberFromProjectUseCase
+            )
         {
             _turnIntoAdminUseCase = turnIntoAdminUseCase;
-            _updateProjectVariablesUseCase = updateProjectVariables;
-            _updateProjectNameUseCase = updateProjectName;
+            _updateProjectVariablesUseCase = updateProjectVariablesUseCase;
+            _updateProjectNameUseCase = updateProjectNameUseCase;
             _createProjectUseCase = createProjectUseCase;
             _getProjectsUseCase = getProjectsUseCase;
-            _updateProjectDescriptionUseCase = updateProjectDescription;
+            _updateProjectDescriptionUseCase = updateProjectDescriptionUseCase;
+            _kickMemberFromProjectUseCase = kickMemberFromProjectUseCase;
         }
             
         private string userId => User.Claims.FirstOrDefault(c => c.Type == "id")?.Value
@@ -97,6 +103,30 @@ namespace envmanager.src.app.controllers
             }
 
             return Ok(new { message = "Nothing updated" });
+        }
+        [Authorize]
+        [HttpPut("kick")]
+        public async Task<ActionResult> KickMemberFromProject([FromBody] KickMemberFromProjectRequest request)
+        {
+            bool result = await _kickMemberFromProjectUseCase.Execute(request, userId);
+            if (result)
+            {
+                return Ok(new { message = "Member removed from the project successfully" });
+            }
+
+            return Ok(new { message = "Member not removed from the project" });
+        }
+        [Authorize]
+        [HttpDelete("delete")]
+        public async Task<ActionResult> DeleteProject([FromBody] string projectId)
+        {
+            bool result = await _deleteProjectUseCase.Execute(projectId);
+            if (result)
+            {
+                return Ok(new { message = "Project deleted successfully" });
+            }
+
+            return Ok(new { message = "Project not deleted" });
         }
     }
 }

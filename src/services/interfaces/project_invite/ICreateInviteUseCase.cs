@@ -1,6 +1,6 @@
 ﻿using static envmanager.src.data.service.dtos.InviteDtos;
 
-namespace envmanager.src.services.usecases.invitation
+namespace envmanager.src.services.interfaces.project_invite
 {
     public interface ICreateInviteUseCase
     {
