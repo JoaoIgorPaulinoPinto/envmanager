@@ -8,7 +8,10 @@ namespace envmanager.src.data.service.dtos
     {
         public record GetMemberResponse()
         {
-            [Required(ErrorMessage ="Member name is required.")]
+
+            [Required(ErrorMessage = "Member id is required.")]
+            public string Id { get; set; } = "";
+            [Required(ErrorMessage = "Member name is required.")]
             public string Name { get; set; } = "";
             [Required(ErrorMessage = "Invalid state to member authorizations.")]
             public bool isAdmin { get; set; } = false;

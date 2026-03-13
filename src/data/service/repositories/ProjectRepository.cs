@@ -3,7 +3,6 @@ using envmanager.src.data.service.interfaces;
 using envmanager.src.data.service.schemes;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using static MongoDB.Bson.Serialization.Serializers.SerializerHelper;
 
 namespace envmanager.src.data.service.repositories
 {
@@ -37,6 +36,14 @@ namespace envmanager.src.data.service.repositories
             return await _context.Projects
                 .Find(p => p.Id == projectId)
                 .FirstOrDefaultAsync();
+        }
+        public async Task<List<ProjectMember>?> GetMembersFromProject(string projectId)
+        {
+            var project = await _context.Projects
+                .Find(p => p.Id == projectId)
+                .FirstOrDefaultAsync();
+            var members = project?.Members;
+            return members;
         }
 
         public async Task<bool> UpdateVariables(string projectId, List<Key> variables)
@@ -86,6 +93,16 @@ namespace envmanager.src.data.service.repositories
             return result.ModifiedCount > 0;
         }
 
+        public async Task<bool> UpdateOwner(string projectId, string newOwnerId)
+        {
+            var filter = Builders<Project>.Filter.Eq(p => p.Id, projectId);
+
+            var update = Builders<Project>.Update.Set(p => p.UserId, newOwnerId);
+
+            var result = await _context.Projects.UpdateOneAsync(filter, update);
+
+            return result.ModifiedCount > 0;
+        }
         public async Task<bool> AddMember(string projectId, ProjectMember member)
         {
             var filter = Builders<Project>.Filter.Eq(p => p.Id, projectId);
@@ -104,17 +121,41 @@ namespace envmanager.src.data.service.repositories
 
             return result.ModifiedCount > 0;
         }
+        public async Task<bool> ExitProject(string projectId, string userId)
+        {
 
+            var filter = Builders<Project>.Filter.Eq(p => p.Id, projectId);
+
+            var update = Builders<Project>.Update.PullFilter(p => p.Members,
+                m => m.Id == userId);
+
+            var result = await _context.Projects.UpdateOneAsync(filter, update);
+
+            return result.ModifiedCount > 0;
+        }
+   
         public async Task<bool> DeleteProject(string projectId)
         {
             var filter = Builders<Project>.Filter.Eq(p => p.Id, projectId);
             var result = _context.Projects.DeleteOne(filter);
             return result.DeletedCount > 0;
         }
-        public async Task<bool> RemoverAdminPrivilege(string projectId)
+
+        public Task<bool> IsAdmin(string projectId, string userId)
         {
-            //implementar
-            return true;
+            var project = _context.Projects.Find(p => p.Id == projectId).FirstOrDefault();
+            if(project.UserId == userId)
+            {
+                return Task.FromResult(true);
+            }
+            foreach (var member in project.Members)
+            {
+                if (member.Id == userId)
+                {
+                    return Task.FromResult(member.isAdmin);
+                }
+            }
+            return Task.FromResult(false);
         }
     }
 }

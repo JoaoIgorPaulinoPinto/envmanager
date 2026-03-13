@@ -4,6 +4,6 @@ namespace envmanager.src.services.interfaces.project
 {
     public interface IKickMemberFromProjectUseCase
     {
-        public Task<bool> Execute(KickMemberFromProjectRequest request,  string requesterUserId);
+        public Task<bool> Execute(KickMemberFromProjectRequest request, string requesterUserId);
     }
 }

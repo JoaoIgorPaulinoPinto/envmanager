@@ -1,4 +1,4 @@
-﻿namespace envmanager.src.services.interfaces
+﻿namespace envmanager.src.services.interfaces.project
 {
     public interface IDeleteProjectUseCase
     {

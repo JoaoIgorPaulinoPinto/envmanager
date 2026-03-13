@@ -17,19 +17,22 @@ namespace envmanager.src.app.controllers
         private readonly IUpdateProjectDescriptionUseCase _updateProjectDescriptionUseCase;
         private readonly ITurnIntoAdminUseCase _turnIntoAdminUseCase;
         private readonly IKickMemberFromProjectUseCase _kickMemberFromProjectUseCase;
+        private readonly IExitProjectUseCase _exitProjcetUseCase;
 
         public ProjectController(
+            IExitProjectUseCase exitProjcetUseCase,
             ITurnIntoAdminUseCase turnIntoAdminUseCase,
             IUpdateProjectVariablesUseCase updateProjectVariablesUseCase,
-            IDeleteProjectUseCase _deleteProjectUseCase,
+            IDeleteProjectUseCase deleteProjectUseCase,
             IGetProjectsUseCase getProjectsUseCase,
             ICreateProjectUseCase createProjectUseCase,
             IUpdateProjectNameUseCase updateProjectNameUseCase,
-            IDeleteProjectUseCase deleteProjectUseCase,
             IUpdateProjectDescriptionUseCase updateProjectDescriptionUseCase,
             IKickMemberFromProjectUseCase kickMemberFromProjectUseCase
             )
         {
+            _deleteProjectUseCase = deleteProjectUseCase;
+            _exitProjcetUseCase = exitProjcetUseCase;
             _turnIntoAdminUseCase = turnIntoAdminUseCase;
             _updateProjectVariablesUseCase = updateProjectVariablesUseCase;
             _updateProjectNameUseCase = updateProjectNameUseCase;
@@ -94,7 +97,7 @@ namespace envmanager.src.app.controllers
 
         [Authorize]
         [HttpPut("admin")]
-        public async Task<ActionResult> TurnMemberToAdmin([FromBody] TurnIntoAdminRequest request)
+        public async Task<ActionResult> TurnMemberToAdmin([FromBody] ToggleMemberAdminRequest request)
         {
             bool result = await _turnIntoAdminUseCase.Execute(request, userId);
             if (result)
@@ -127,6 +130,18 @@ namespace envmanager.src.app.controllers
             }
 
             return Ok(new { message = "Project not deleted" });
+        }
+        [Authorize]
+        [HttpDelete("exit")]
+        public async Task<ActionResult> ExitProject([FromQuery] string projectId)
+        {
+            bool result = await _exitProjcetUseCase.Execute(projectId, userId);
+            if (result)
+            {
+                return Ok(new { message = "Project quited successfully" });
+            }
+
+            return Ok(new { message = "Project not quited" });
         }
     }
 }

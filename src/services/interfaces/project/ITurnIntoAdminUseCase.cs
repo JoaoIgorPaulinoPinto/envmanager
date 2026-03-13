@@ -4,6 +4,6 @@ namespace envmanager.src.services.interfaces.project
 {
     public interface ITurnIntoAdminUseCase
     {
-        public Task<bool> Execute(TurnIntoAdminRequest request, string adminId);
+        public Task<bool> Execute(ToggleMemberAdminRequest request, string adminId);
     }
 }

@@ -87,12 +87,17 @@ builder.Services.AddScoped<IAuthLoginUseCase, AuthLoginUseCase>();
 builder.Services.AddScoped<IAuthLogoutUseCase, AuthLogoutUseCase>();
 builder.Services.AddScoped<IGetProjectsUseCase, GetProjectsUseCase>();
 builder.Services.AddScoped<ICreateProjectUseCase, CreateProjectUseCase>();
-builder.Services.AddScoped<IDeleteProjectUseCase, UpdateProjectVariablesUseCase>();
+builder.Services.AddScoped<IDeleteProjectUseCase, DeleteProjectUseCase>();
+builder.Services.AddScoped<IGetMembersFromProject, GetMembersFromProject>();
+builder.Services.AddScoped<IKickMemberFromProjectUseCase, KickMemberFromProjectUseCase>();
+builder.Services.AddScoped<IUpdateProjectVariablesUseCase, UpdateProjectVariablesUseCase>();
 builder.Services.AddScoped<ICreateInviteUseCase, CreateInviteUseCase>();
 builder.Services.AddScoped<IUpdateProjectDescriptionUseCase, UpdateProjectDescriptionUseCase>();
 builder.Services.AddScoped<IUpdateProjectNameUseCase, UpdateProjectNameUseCase>();
 builder.Services.AddScoped<IResponseInvitationUseCase, ResponseInvitationUseCase>();
 builder.Services.AddScoped<ITurnIntoAdminUseCase, TurnIntoAdminUseCase>();
+builder.Services.AddScoped<IDeleteProjectUseCase, DeleteProjectUseCase>();
+builder.Services.AddScoped<IExitProjectUseCase, ExitProjectUseCase>();
 builder.Services.AddSingleton<ITokenFactory, TokenFactory>();
 
 // --- Configuração de CORS (Obrigatório para o SignalR) ---

@@ -13,8 +13,8 @@
 @contentType = application/json
 
 ### Variaveis de estado
-@lastUserId = COLE_USER_ID_AQUI
-@lastProjectId = COLE_PROJECT_ID_AQUI
+@lastUserId = 69ac9acdbc4f476ffcd0827d
+@lastProjectId = 69aca1f3d66c153e0ccca8ef
 
 ### Tokens capturados da requisicao "Login"
 @accessToken = {{login.response.body.$.token}}
@@ -112,7 +112,7 @@ Content-Type: {{contentType}}
 # ==========================================
 
 ### 3.1 Atualizar nome e descricao do projeto
-PUT {{baseUrl}}/project/update
+PUT {{baseUrl}}/project/update 
 Authorization: Bearer {{accessToken}}
 Content-Type: {{contentType}}
 
@@ -148,7 +148,8 @@ Content-Type: {{contentType}}
 
 {
   "user_id": "{{lastUserId}}",
-  "project_id": "{{lastProjectId}}"
+  "project_id": "{{lastProjectId}}",
+  "to_admin": true
 }
 
 ### 3.4 Remover membro do projeto (kick member)
@@ -167,6 +168,11 @@ Authorization: Bearer {{accessToken}}
 Content-Type: {{contentType}}
 
 "{{lastProjectId}}"
+
+### 3.6 Sair do projeto
+DELETE {{baseUrl}}/project/exit?projectId={{lastProjectId}}
+Authorization: Bearer {{accessToken}}
+Accept: {{contentType}}
 
 # ==========================================
 # 4. CONVITES

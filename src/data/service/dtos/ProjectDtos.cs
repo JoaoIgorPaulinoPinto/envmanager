@@ -61,15 +61,17 @@ namespace envmanager.src.data.service.dtos
             public string project_name { get; set; } = string.Empty;
             public string project_description { get; set; } = string.Empty;
         }
-        public record TurnIntoAdminRequest
+        public record ToggleMemberAdminRequest
         {
             public string user_id { get; set; } = string.Empty;
             public string project_id { get; set; } = string.Empty;
+            public bool to_admin { get; set; } = false;
         }
         public record KickMemberFromProjectRequest
         {
             public string member_id { get; set; } = string.Empty;
             public string project_id { get; set; } = string.Empty;
         }
+  
     }
 }

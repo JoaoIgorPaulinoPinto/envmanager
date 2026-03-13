@@ -84,7 +84,7 @@ namespace envmanager.src.services.usecases.invitation
 
             await _projectRepository.AddMember(projectId, new ProjectMember
             {
-                Id = invitedId,
+                Id = invitedUser.Id,
                 isAdmin = false
             });
 
