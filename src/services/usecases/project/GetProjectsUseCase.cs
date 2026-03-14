@@ -38,6 +38,7 @@ namespace envmanager.src.services.usecases.project
                 description = p.Description,
                 access_link = p.AccesLink,
                 isOwner = p.UserId == userId,
+                isAdmin = p.UserId == userId || p.Members.Any(m => m.Id == userId && m.isAdmin),
                 need_password = !string.IsNullOrEmpty(p.Password)
             }).ToList();
         }
@@ -106,8 +107,10 @@ namespace envmanager.src.services.usecases.project
                 var user = await _userRepository.GetSchemaById(member.Id);
                 members.Add(new MemberDtos.GetMemberResponse
                 {
+                    Id = member.Id,
                     Name = user?.UserName ?? "Unknown User",
-                    isAdmin = member.isAdmin
+                    isAdmin = member.isAdmin,
+                    isOwner = project.UserId == member.Id
                 });
             }
 
@@ -117,6 +120,7 @@ namespace envmanager.src.services.usecases.project
                 name = project.ProjectName,
                 description = project.Description,
                 isOwner = project.UserId == userId,
+                isAdmin = project.UserId == userId || project.Members.Any(m => m.Id == userId),
                 access_link = project.AccesLink,
                 members = members,
                 variables = project.Variables.Select(v => new KeyDTos.GetVariableResponse

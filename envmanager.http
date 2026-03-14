@@ -179,7 +179,7 @@ Accept: {{contentType}}
 # ==========================================
 
 ### 4.1 Enviar convite
-POST {{baseUrl}}/invite
+POST {{baseUrl}}/invite 
 Authorization: Bearer {{accessToken}}
 Content-Type: {{contentType}}
 

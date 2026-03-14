@@ -22,6 +22,7 @@ namespace envmanager.src.data.service.dtos
         public record GetProjectsResponse
         {
             public bool isOwner { get; set; } = false;
+            public bool isAdmin { get; set; } = false;
             public string id { get; set; } = string.Empty;
             public string name { get; set; } = string.Empty;
             public string access_link { get; set; } = string.Empty;
@@ -39,6 +40,8 @@ namespace envmanager.src.data.service.dtos
             public string description { get; set; } = string.Empty;
             [Required]
             public bool isOwner { get; set; } = false;
+            [Required]
+            public bool isAdmin { get; set; } = false;
             [Required]
             public string access_link { get; set; } = string.Empty;
             [Required]

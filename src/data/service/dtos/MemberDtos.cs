@@ -15,6 +15,8 @@ namespace envmanager.src.data.service.dtos
             public string Name { get; set; } = "";
             [Required(ErrorMessage = "Invalid state to member authorizations.")]
             public bool isAdmin { get; set; } = false;
+            public bool isOwner { get; set; } = false;
+
         }
     }
 }

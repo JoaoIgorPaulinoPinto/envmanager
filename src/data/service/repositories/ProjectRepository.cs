@@ -3,6 +3,7 @@ using envmanager.src.data.service.interfaces;
 using envmanager.src.data.service.schemes;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Linq;
 
 namespace envmanager.src.data.service.repositories
 {
@@ -17,6 +18,18 @@ namespace envmanager.src.data.service.repositories
 
         public async Task<bool> CreateProject(Project project)
         {
+            if (project == null)
+                throw new ArgumentNullException(nameof(project));
+
+            var members = project.Members ?? new List<ProjectMember>();
+            var creatorId = project.UserId;
+
+            if (!string.IsNullOrWhiteSpace(creatorId) && !members.Any(m => m.Id == creatorId))
+            {
+                members.Add(new ProjectMember { Id = creatorId, isAdmin = true });
+                project.Members = members;
+            }
+
             await _context.Projects.InsertOneAsync(project);
             return true;
         }
