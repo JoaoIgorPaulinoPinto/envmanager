@@ -13,6 +13,7 @@ namespace envmanager.src.app.controllers
         private readonly IGetProjectsUseCase _getProjectsUseCase;
         private readonly IDeleteProjectUseCase _deleteProjectUseCase;
         private readonly IUpdateProjectVariablesUseCase _updateProjectVariablesUseCase;
+        //private readonly IRemoveProjectVariableUseCase _removeProjectVariablesUseCase;
         private readonly IUpdateProjectNameUseCase _updateProjectNameUseCase;
         private readonly IUpdateProjectDescriptionUseCase _updateProjectDescriptionUseCase;
         private readonly ITurnIntoAdminUseCase _turnIntoAdminUseCase;
@@ -29,8 +30,10 @@ namespace envmanager.src.app.controllers
             IUpdateProjectNameUseCase updateProjectNameUseCase,
             IUpdateProjectDescriptionUseCase updateProjectDescriptionUseCase,
             IKickMemberFromProjectUseCase kickMemberFromProjectUseCase
+            //IRemoveProjectVariableUseCase removeVariableUseCase
             )
         {
+            //_removeVariableUseCase = removeVariableUseCase;
             _deleteProjectUseCase = deleteProjectUseCase;
             _exitProjcetUseCase = exitProjcetUseCase;
             _turnIntoAdminUseCase = turnIntoAdminUseCase;
@@ -79,6 +82,13 @@ namespace envmanager.src.app.controllers
             await _updateProjectVariablesUseCase.Execute(updateVariablesRequest, userId);
             return Ok(new { message = "Variables successfully updated" });
         }
+        //[Authorize]
+        //[HttpPut("variables/remove")]
+        //public async Task<ActionResult> RemoveVariable([FromBody] RemoveVariableRequest removeVariableRequest)
+        //{
+        //    await _removeVariableUseCase.Execute(removeVariableRequest, userId);
+        //    return Ok(new { message = "Variables successfully removed" });
+        //}
 
         [Authorize]
         [HttpPut("update")]

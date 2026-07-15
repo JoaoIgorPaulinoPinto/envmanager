@@ -64,15 +64,13 @@ namespace envmanager.src.data.service.repositories
             var filter = Builders<Project>.Filter.Eq(p => p.Id, projectId);
 
             var cleanedVariables = variables
-                .Where(v => !string.IsNullOrEmpty(v.Variable) || !string.IsNullOrEmpty(v.Value))
+                .Where(v => !string.IsNullOrWhiteSpace(v.Variable) || !string.IsNullOrWhiteSpace(v.Value))
                 .ToList();
 
             var update = Builders<Project>.Update.Set(p => p.Variables, cleanedVariables);
-
             var result = await _context.Projects.UpdateOneAsync(filter, update);
-            return result.ModifiedCount > 0;
+            return result.IsAcknowledged && result.ModifiedCount > 0;
         }
-
         public async Task<bool> UpdateName(string name, string projectId)
         {
             var filter = Builders<Project>.Filter.Eq(p => p.Id, projectId);

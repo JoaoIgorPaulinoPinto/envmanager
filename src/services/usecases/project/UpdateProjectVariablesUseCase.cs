@@ -38,10 +38,12 @@ namespace envmanager.src.services.usecases.project
             {
                 var existingKey = project.Variables.FirstOrDefault(k => k.Id == incomingVar.id);
 
+              
                 if (existingKey != null)
                 {
-                    existingKey.Value = incomingVar.Value;
-                    existingKey.Variable = incomingVar.variable;
+
+                        existingKey.Value = incomingVar.Value;
+                        existingKey.Variable = incomingVar.variable;
                 }
                 else
                 {

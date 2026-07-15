@@ -53,10 +53,18 @@ namespace envmanager.src.data.service.dtos
         public record UpdateVariablesRequest
         {
 
-            [Required(ErrorMessage = "Project id is required.")]
+            [Required(ErrorMessage = "Project ID is required.")]
             public string project_id { get; set; } = string.Empty;
             [Required(ErrorMessage = "Some variable is required to update project's variables.")]
             public List<CreateVariableRequest> variables { get; set; } = [];
+        }
+        public record RemoveVariableRequest
+        {
+
+            [Required(ErrorMessage = "Project ID is required.")]
+            public string project_id { get; set; } = string.Empty;
+            [Required(ErrorMessage = "The variable ID is required to update project's variables.")]
+            public string variable_id { get; set; } = string.Empty;
         }
         public record UpdateNameAndDescriptionRequest
         {

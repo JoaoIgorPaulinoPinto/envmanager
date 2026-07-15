@@ -12,25 +12,24 @@
 @baseUrl = http://{{hostname}}:{{port}}
 @contentType = application/json
 
-### Variaveis de estado
-@lastUserId = 69ac9acdbc4f476ffcd0827d
-@lastProjectId = 69aca1f3d66c153e0ccca8ef
-
-### Tokens capturados da requisicao "Login"
-@accessToken = {{login.response.body.$.token}}
-@refreshToken = {{login.response.body.$.refreshToken}}
-
 # ==========================================
 # 1. AUTENTICACAO E USUARIO
 # ==========================================
 
+### Variaveis de estado
+@lastUserId = 6a57acf6607dc40d663efe10
+@lastProjectId = 6a57b036607dc40d663efe16
+
+### Tokens capturados da requisicao "Login"
+@accessToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhNTdhY2Y2NjA3ZGM0MGQ2NjNlZmUxMCIsImVtYWlsIjoiZGV2QGdtYWlsLmNvbSIsImp0aSI6IjFlYjI5YmExLTYxMjctNDEzOS1iZGFjLWQ4MTU3ODRkZGY4NiIsImV4cCI6MTc4NDEzNDkwOSwiaXNzIjoiZW52bWFuYWdlcl9hcGkiLCJhdWQiOiJlbnZtYW5hZ2VyX2FwaSJ9.WayDM2hlOKVj8M-wQvuf3dowCZUqYVXUwzftnwwjP2k
+@refreshToken = DE7F5D123E3C909A7510226AE83A1538B806A284E64F133226F83E21D3EDEE8E
 ### 1.1 Cadastro de usuario
 POST {{baseUrl}}/user
 Content-Type: {{contentType}}
 
 {
-  "user_name": "Joao Silva",
-  "email": "joao.silva@example.com",
+  "user_name": "Joao Igor",
+  "email": "dev@gmail.com",
   "password": "1234"
 }
 
@@ -40,7 +39,7 @@ POST {{baseUrl}}/auth
 Content-Type: {{contentType}}
 
 {
-  "email": "jao@gmail.com",
+  "email": "dev@gmail.com",
   "password": "1234"
 }
 
@@ -49,7 +48,7 @@ POST {{baseUrl}}/auth/refresh
 Content-Type: {{contentType}}
 
 {
-  "refreshToken": "{{refreshToken}}"
+  "refreshToken": "E9E8DF4629A805E14A807DAC2A8D4FA8EAD5CE862EC65553B63765FFCFDBE8EB"
 }
 
 ### 1.4 Logout
@@ -111,7 +110,7 @@ Content-Type: {{contentType}}
 # 3. CONFIGURACOES E MEMBROS
 # ==========================================
 
-### 3.1 Atualizar nome e descricao do projeto
+### '3.1 Atualizar nome e descricao do projeto
 PUT {{baseUrl}}/project/update 
 Authorization: Bearer {{accessToken}}
 Content-Type: {{contentType}}
@@ -128,7 +127,7 @@ Authorization: Bearer {{accessToken}}
 Content-Type: {{contentType}}
 
 {
-  "project_id": "{{lastProjectId}}",
+  "project_id": "6a57b036607dc40d663efe16",
   "variables": [
     {
       "variable": "DEFAULT_API_KEY",
@@ -136,7 +135,7 @@ Content-Type: {{contentType}}
     },
     {
       "variable": "DB_CONNECTION",
-      "Value": "mongodb://localhost:27017"
+      "Value": ""
     }
   ]
 }

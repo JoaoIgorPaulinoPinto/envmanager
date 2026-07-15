@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\data",
+    "\\src\\data\\service",
+    "\\src\\data\\service\\dtos",
+    "\\src\\services",
+    "\\src\\services\\interfaces",
+    "\\src\\services\\interfaces\\project",
+    "\\src\\services\\usecases",
+    "\\src\\services\\usecases\\project"
+  ],
+  "SelectedNode": "\\src\\services\\interfaces\\project\\IRemoveProjectVariableUseCase.cs",
+  "PreviewInSolutionExplorer": false
+}
